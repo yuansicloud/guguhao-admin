@@ -1,30 +1,16 @@
-/**
- * 该文件可自行根据业务逻辑进行调整
- */
-import type { HttpResponse } from '@vben/request';
-
-import { useAppConfig } from '@vben/hooks';
 import { preferences } from '@vben/preferences';
 import {
   authenticateResponseInterceptor,
   errorMessageResponseInterceptor,
-  RequestClient,
 } from '@vben/request';
 import { useAccessStore } from '@vben/stores';
 
+import { requestClient } from '@abp/request';
 import { message } from 'ant-design-vue';
 
 import { useAuthStore } from '#/store';
 
-// import { refreshTokenApi } from './core';
-
-const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
-
-function createRequestClient(baseURL: string) {
-  const client = new RequestClient({
-    baseURL,
-  });
-
+export function initRequestClient() {
   /**
    * 重新认证逻辑
    */
@@ -47,35 +33,42 @@ function createRequestClient(baseURL: string) {
    * 刷新token逻辑
    */
   async function doRefreshToken() {
-    const accessStore = useAccessStore();
-    // const resp = await refreshTokenApi();
-    // const newToken = resp.data;
-    // accessStore.setAccessToken(newToken);
-    return String(accessStore.accessToken);
+    return '';
   }
 
   function formatToken(token: null | string) {
     return token ? `Bearer ${token}` : null;
   }
-
   // 请求头处理
-  client.addRequestInterceptor({
+  requestClient.addRequestInterceptor({
     fulfilled: async (config) => {
       const accessStore = useAccessStore();
-
-      config.headers.Authorization = formatToken(accessStore.accessToken);
+      if (accessStore.accessToken) {
+        config.headers.Authorization = `${accessStore.accessToken}`;
+      }
       config.headers['Accept-Language'] = preferences.app.locale;
+      config.headers['X-Request-From'] = 'vben';
       return config;
     },
   });
 
   // response数据解构
-  client.addResponseInterceptor<HttpResponse>({
+  requestClient.addResponseInterceptor<any>({
     fulfilled: (response) => {
-      const { data: responseData, status } = response;
+      const { data, status, headers } = response;
 
-      const { code, data } = responseData;
-      if (status >= 200 && status < 400 && code === 0) {
+      if (headers._abpwrapresult === 'true') {
+        const { code, result, message, details } = data;
+        const hasSuccess = data && Reflect.has(data, 'code') && code === '0';
+        if (hasSuccess) {
+          return result;
+        }
+        const content = details || message;
+
+        throw Object.assign({}, response, { response, message: content });
+      }
+
+      if (status >= 200 && status < 400) {
         return data;
       }
 
@@ -84,9 +77,9 @@ function createRequestClient(baseURL: string) {
   });
 
   // token过期的处理
-  client.addResponseInterceptor(
+  requestClient.addResponseInterceptor(
     authenticateResponseInterceptor({
-      client,
+      client: requestClient,
       doReAuthenticate,
       doRefreshToken,
       enableRefreshToken: preferences.app.enableRefreshToken,
@@ -95,7 +88,7 @@ function createRequestClient(baseURL: string) {
   );
 
   // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
-  client.addResponseInterceptor(
+  requestClient.addResponseInterceptor(
     errorMessageResponseInterceptor((msg: string, error) => {
       // 这里可以根据业务进行定制,你可以拿到 error 内的信息进行定制化处理，根据不同的 code 做不同的提示，而不是直接使用 message.error 提示 msg
       // 当前mock接口返回的错误字段是 error 或者 message
@@ -105,10 +98,4 @@ function createRequestClient(baseURL: string) {
       message.error(errorMessage || msg);
     }),
   );
-
-  return client;
 }
-
-export const requestClient = createRequestClient(apiURL);
-
-export const baseRequestClient = new RequestClient({ baseURL: apiURL });

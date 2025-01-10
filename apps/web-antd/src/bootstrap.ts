@@ -11,20 +11,22 @@ import { useTitle } from '@vueuse/core';
 import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
+import { initRequestClient } from './adapter/request';
 import App from './app.vue';
 import { router } from './router';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器
   await initComponentAdapter();
+  initRequestClient();
 
   const app = createApp(App);
 
-  // 国际化 i18n 配置
-  await setupI18n(app);
-
   // 配置 pinia-tore
   await initStores(app, { namespace });
+
+  // 国际化 i18n 配置
+  await setupI18n(app);
 
   // 安装权限指令
   registerAccessDirective(app);
