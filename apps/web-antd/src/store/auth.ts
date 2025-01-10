@@ -6,15 +6,18 @@ import { useRouter } from 'vue-router';
 import { DEFAULT_HOME_PATH, LOGIN_PATH } from '@vben/constants';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
+import { tokenApi, userInfoApi } from '@abp/account';
+import { useAbpStore } from '@abp/core';
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import { getConfigApi } from '#/api/core/abp';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
   const userStore = useUserStore();
+  const abpStore = useAbpStore();
   const router = useRouter();
 
   const loginLoading = ref(false);
@@ -32,22 +35,16 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     try {
       loginLoading.value = true;
-      const { accessToken } = await loginApi(params);
-
+      const loginResult = await tokenApi.loginApi(params as any);
+      const { accessToken, tokenType, refreshToken } = loginResult;
       // 如果成功获取到 accessToken
       if (accessToken) {
-        accessStore.setAccessToken(accessToken);
+        accessStore.setAccessToken(`${tokenType} ${accessToken}`);
+        accessStore.setRefreshToken(refreshToken);
 
-        // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
-          fetchUserInfo(),
-          getAccessCodesApi(),
-        ]);
-
-        userInfo = fetchUserInfoResult;
+        userInfo = await fetchUserInfo();
 
         userStore.setUserInfo(userInfo);
-        accessStore.setAccessCodes(accessCodes);
 
         if (accessStore.loginExpired) {
           accessStore.setLoginExpired(false);
@@ -76,7 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout(redirect: boolean = true) {
     try {
-      await logoutApi();
+      // await logoutApi();
     } catch {
       // 不做任何处理
     }
@@ -95,9 +92,23 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchUserInfo() {
-    let userInfo: null | UserInfo = null;
-    userInfo = await getUserInfoApi();
+    let userInfo: null | (UserInfo & { [key: string]: any }) = null;
+    const userInfoRes = await userInfoApi.getUserInfoApi();
+    const abpConfig = await getConfigApi();
+    userInfo = {
+      userId: userInfoRes.sub,
+      username: userInfoRes.uniqueName,
+      realName: userInfoRes.name,
+      avatar: userInfoRes.avatarUrl ?? userInfoRes.picture,
+      desc: userInfoRes.uniqueName ?? userInfoRes.name,
+      email: userInfoRes.email ?? userInfoRes.email,
+      token: '',
+      roles: abpConfig.currentUser.roles,
+      homePath: '/',
+    };
     userStore.setUserInfo(userInfo);
+    abpStore.setApplication(abpConfig);
+    accessStore.setAccessCodes(Object.keys(abpConfig.auth.grantedPolicies));
     return userInfo;
   }
 

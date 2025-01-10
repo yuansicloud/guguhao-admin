@@ -156,6 +156,11 @@ const customConfig: Linter.Config[] = [
       'no-console': 'off',
     },
   },
+  {
+    // abp 包规则
+    files: ['packages/@abp/**'],
+    rules: {},
+  },
 ];
 
 export { customConfig };
