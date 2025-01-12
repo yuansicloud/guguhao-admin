@@ -26,6 +26,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@guguhao/jx3": "workspace:*",
     "@abp/account": "workspace:*",
     "@abp/auditing": "workspace:*",
     "@abp/core": "workspace:*",

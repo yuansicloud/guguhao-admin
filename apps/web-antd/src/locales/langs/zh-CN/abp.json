@@ -1,0 +1,33 @@
+{
+  "assets": "外观",
+  "manage": {
+    "identity": {
+      "auditLogs": "审计日志",
+      "claimTypes": "身份标识",
+      "organizationUnits": "组织机构",
+      "role": "角色",
+      "securityLogs": "安全日志",
+      "title": "身份认证管理",
+      "user": "用户"
+    },
+    "permissions": {
+      "definitions": "权限定义",
+      "groups": "权限分组",
+      "title": "权限管理"
+    },
+    "settings": {
+      "definitions": "设置定义",
+      "system": "系统设置",
+      "title": "设置管理"
+    },
+    "title": "管理"
+  },
+  "openiddict": {
+    "applications": "应用管理",
+    "authorizations": "授权管理",
+    "scopes": "范围管理",
+    "title": "OpenIddict",
+    "tokens": "授权令牌"
+  },
+  "title": "Abp框架"
+}

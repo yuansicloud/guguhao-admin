@@ -2,6 +2,7 @@ packages:
   - internal/*
   - internal/lint-configs/*
   - packages/*
+  - packages/@guguhao/*
   - packages/@abp/*
   - packages/@core/base/*
   - packages/@core/ui-kit/*
