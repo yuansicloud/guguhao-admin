@@ -1,28 +1,31 @@
 <script setup lang="ts">
-import { defineOptions, defineEmits, ref, toValue } from 'vue';
+import type { FormInstance } from 'ant-design-vue';
+
+import type { AssetDto, CreateUpdateAssetDto } from '../../types/assets';
+
+import { defineEmits, defineOptions, ref, toValue } from 'vue';
+
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
-import dayjs from 'dayjs';
+
+import { formatToDate } from '@abp/core';
 import {
   Avatar,
-  message,
+  Checkbox,
+  DatePicker,
   Form,
   Input,
-  Select,
-  Checkbox,
   InputNumber,
+  message,
+  Select,
   Textarea,
-  DatePicker,
 } from 'ant-design-vue';
-import type { FormInstance } from 'ant-design-vue';
+import dayjs from 'dayjs';
+
 import { createApi, getApi, updateApi } from '../../api/assets';
-import {
-  AssetType,
-  type AssetDto,
-  type CreateUpdateAssetDto,
-} from '../../types/assets';
 import { useAssets } from '../../hooks/useAssets';
-import { formatToDate } from '@abp/core';
+import { AssetType } from '../../types/assets';
+
 defineOptions({
   name: 'AssetModal',
 });
@@ -32,7 +35,7 @@ const emits = defineEmits<{
 }>();
 
 const { assetTypeDisplayMap } = useAssets();
-const entityId = ref<string | null>(null);
+const entityId = ref<null | string>(null);
 
 const defaultModel = {} as CreateUpdateAssetDto;
 const form = ref<FormInstance>();
@@ -86,7 +89,7 @@ const [Modal, modalApi] = useVbenModal({
           modalApi.setState({
             title: `${$t('JX3.Asset')} - ${dto.name}`,
           });
-        } catch (error) {
+        } catch {
           message.error($t('AbpUi.Error'));
         } finally {
           modalApi.setState({ loading: false });
@@ -112,7 +115,11 @@ function onDateChange(e: any) {
       :model="formModel"
       :wrapper-col="{ span: 18 }"
     >
-      <FormItem :label="$t('JX3.AssetAvatar')" name="avatar">
+      <FormItem
+        :label="$t('JX3.AssetAvatar')"
+        name="avatar"
+        v-if="formModel.avatar"
+      >
         <Avatar :src="formModel.avatar" :size="60" shape="square" />
       </FormItem>
 
@@ -146,17 +153,17 @@ function onDateChange(e: any) {
       <FormItem
         :label="$t('JX3.AssetIsHighValue')"
         name="isHighValue"
-        valuePropName="checked"
+        value-prop-name="checked"
       >
-        <Checkbox v-model:checked="formModel.isHighValue"> </Checkbox>
+        <Checkbox v-model:checked="formModel.isHighValue" />
       </FormItem>
 
       <FormItem
         :label="$t('JX3.AssetIsUnique')"
         name="isUnique"
-        valuePropName="checked"
+        value-prop-name="checked"
       >
-        <Checkbox v-model:checked="formModel.isUnique"> </Checkbox>
+        <Checkbox v-model:checked="formModel.isUnique" />
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetPrice')" name="price">

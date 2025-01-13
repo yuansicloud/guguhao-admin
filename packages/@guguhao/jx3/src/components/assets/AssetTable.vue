@@ -1,39 +1,33 @@
 <script setup lang="ts">
 import type { SortOrder } from '@abp/core';
-
 import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
 
 import type { AssetDto } from '../../types/assets';
 
 import { defineAsyncComponent, h, ref } from 'vue';
 
-import { useAccess } from '@vben/access';
 import { useVbenModal } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue';
-import { Button, message, Modal } from 'ant-design-vue';
+import { EditOutlined } from '@ant-design/icons-vue';
+import { Button, Tag } from 'ant-design-vue';
 
-import { deleteApi, getPagedListApi } from '../../api/assets';
-import { AssetPermissions } from '../../constants/permissions';
-import { AssetType } from '../../types/assets';
+import { getPagedListApi } from '../../api/assets';
 import { useAssets } from '../../hooks/useAssets';
-import { Tag } from 'ant-design-vue';
-const { getAssetTypeColor, getAssetTypeValue, assetTypeDisplayMap } =
-  useAssets();
+import { AssetType } from '../../types/assets';
+
 defineOptions({
   name: 'AssetTable',
 });
-
+const { assetTypeDisplayMap, getAssetTypeColor, getAssetTypeValue } =
+  useAssets();
 const AssetModal = defineAsyncComponent(() => import('./AssetModal.vue'));
 const CheckIcon = createIconifyIcon('ant-design:check-outlined');
 const CloseIcon = createIconifyIcon('ant-design:close-outlined');
 
-const sorting = ref<string | null>(null);
-
-const { hasAccessByCodes } = useAccess();
+const sorting = ref<null | string>(null);
 
 const valueTypeOptions = Object.keys(assetTypeDisplayMap).map((key) => {
   const assetType = assetTypeDisplayMap[Number(key) as AssetType];
@@ -55,13 +49,13 @@ const formOptions: VbenFormProps = {
     },
     {
       component: 'Select',
-      fieldName: 'assetType',
-      formItemClass: 'col-span-1 items-baseline',
       componentProps: {
         allowClear: true,
         options: valueTypeOptions,
         placeholder: '请选择',
       },
+      fieldName: 'assetType',
+      formItemClass: 'col-span-1 items-baseline',
       label: $t('JX3.AssetAssetType'),
     },
   ],
@@ -72,57 +66,62 @@ const formOptions: VbenFormProps = {
 };
 
 const gridOptions: VxeGridProps<AssetDto> = {
+  columnConfig: {
+    resizable: true,
+  },
   columns: [
     {
-      align: 'left',
+      align: 'center',
       field: 'name',
-      minWidth: 120,
       title: $t('JX3.AssetName'),
+      width: 'auto',
     },
     {
-      align: 'left',
+      align: 'center',
       field: 'alias',
       title: $t('JX3.AssetAlias'),
+      width: 'auto',
     },
     {
-      align: 'left',
+      align: 'center',
       field: 'price',
-      title: $t('JX3.AssetPrice'),
       sortable: true,
+      title: $t('JX3.AssetPrice'),
+      width: 'auto',
     },
     {
-      align: 'left',
+      align: 'center',
       field: 'assetType',
       slots: { default: 'assetType' },
       title: $t('JX3.AssetAssetType'),
+      width: '100',
     },
     {
       align: 'center',
       field: 'isHighValue',
       slots: { default: 'isHighValue' },
       title: $t('JX3.AssetIsHighValue'),
+      width: 'auto',
     },
     {
       align: 'center',
       field: 'isUnique',
       slots: { default: 'isUnique' },
       title: $t('JX3.AssetIsUnique'),
+      width: 'auto',
     },
     {
-      align: 'left',
+      align: 'center',
       field: 'description',
       showOverflow: true,
       title: $t('JX3.AssetDescription'),
+      width: 200,
     },
     {
       field: 'action',
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('AbpUi.Actions'),
-      // visible: hasAccessByCodes([
-      //   AssetPermissions.Update,
-      //   AssetPermissions.Delete,
-      // ]),
       width: 180,
     },
   ],
@@ -184,22 +183,22 @@ const handleEdit = (row: AssetDto) => {
   roleModalApi.open();
 };
 
-const handleDelete = (row: AssetDto) => {
-  Modal.confirm({
-    centered: true,
-    content: $t('Abp.WillDeleteClaim', [row.name]),
-    onOk: async () => {
-      await deleteApi(row.id);
-      message.success($t('AbpUi.SuccessfullyDeleted'));
-      query();
-    },
-    title: $t('AbpUi.AreYouSure'),
-  });
-};
+// const handleDelete = (row: AssetDto) => {
+//   Modal.confirm({
+//     centered: true,
+//     content: $t('Abp.WillDeleteClaim', [row.name]),
+//     onOk: async () => {
+//       await deleteApi(row.id);
+//       message.success($t('AbpUi.SuccessfullyDeleted'));
+//       query();
+//     },
+//     title: $t('AbpUi.AreYouSure'),
+//   });
+// };
 </script>
 
 <template>
-  <Grid :table-title="$t('JX3.Asset')">
+  <Grid :table-title="$t('JX3.Asset')" table-layout="auto">
     <template #toolbar-tools>
       <Button type="primary" @click="handleAdd">
         {{ $t('AbpUi.AddNew') }}
