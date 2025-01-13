@@ -141,6 +141,10 @@
       "path": "packages/@core/ui-kit/tabs-ui",
     },
     {
+      "name": "@guguhao/jx3",
+      "path": "packages/@guguhao/jx3",
+    },
+    {
       "name": "@vben/constants",
       "path": "packages/constants",
     },
