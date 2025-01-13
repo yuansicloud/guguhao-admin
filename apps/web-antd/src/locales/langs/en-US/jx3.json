@@ -1,3 +1,6 @@
 {
-  "assets":"外观"
+  "assets": "assets",
+  "fetchWBLAppearanceInfo": "fetch WBL",
+  "WillRefreshAppearance": "Will Refresh Appearance",
+  "SuccessRefresh": "Success Refresh"
 }

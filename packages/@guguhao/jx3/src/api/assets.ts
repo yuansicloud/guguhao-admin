@@ -1,6 +1,10 @@
 import type { PagedResultDto } from '@abp/core';
 
-import type { AssetDto, AssetGetListInput, CreateUpdateAssetDto } from '../types/assets';
+import type {
+  AssetDto,
+  AssetGetListInput,
+  CreateUpdateAssetDto,
+} from '../types/assets';
 
 import { requestClient } from '@abp/request';
 
@@ -18,7 +22,10 @@ export function createApi(input: CreateUpdateAssetDto): Promise<AssetDto> {
  * @param id 剑三外观id
  * @returns 剑三外观实体数据传输对象
  */
-export function updateApi(id: string, input: CreateUpdateAssetDto): Promise<AssetDto> {
+export function updateApi(
+  id: string,
+  input: CreateUpdateAssetDto,
+): Promise<AssetDto> {
   return requestClient.put<AssetDto>(`/api/jx3/asset/${id}`, input);
 }
 
@@ -48,4 +55,12 @@ export function getPagedListApi(
  */
 export function deleteApi(id: string): Promise<void> {
   return requestClient.delete(`/api/jx3/asset/${id}`);
+}
+
+/**
+ * 获取外观万宝楼数据
+ * @param id 剑三外观id
+ */
+export function fetchWBLAppearanceInfoApi(id: string): Promise<void> {
+  return requestClient.post(`/api/jx3/asset/${id}/fetch-wblAppearance-info`);
 }

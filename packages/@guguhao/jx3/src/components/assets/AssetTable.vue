@@ -12,10 +12,10 @@ import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
 import { EditOutlined } from '@ant-design/icons-vue';
-import { Button, Tag } from 'ant-design-vue';
+import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { getPagedListApi } from '../../api/assets';
+import { fetchWBLAppearanceInfoApi, getPagedListApi } from '../../api/assets';
 import { useAssets } from '../../hooks/useAssets';
 import { AssetType } from '../../types/assets';
 
@@ -255,18 +255,18 @@ const handleEdit = (row: AssetDto) => {
   roleModalApi.open();
 };
 
-// const handleDelete = (row: AssetDto) => {
-//   Modal.confirm({
-//     centered: true,
-//     content: $t('Abp.WillDeleteClaim', [row.name]),
-//     onOk: async () => {
-//       await deleteApi(row.id);
-//       message.success($t('AbpUi.SuccessfullyDeleted'));
-//       query();
-//     },
-//     title: $t('AbpUi.AreYouSure'),
-//   });
-// };
+const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
+  Modal.confirm({
+    centered: true,
+    content: $t('jx3.WillRefreshAppearance', [row.name]),
+    onOk: async () => {
+      await fetchWBLAppearanceInfoApi(row.id);
+      message.success($t('jx3.SuccessRefresh'));
+      query();
+    },
+    title: $t('AbpUi.AreYouSure'),
+  });
+};
 </script>
 
 <template>
@@ -305,17 +305,11 @@ const handleEdit = (row: AssetDto) => {
             {{ $t('AbpUi.Edit') }}
           </Button>
         </div>
-        <!-- <div class="basis-1/2">
-          <Button
-            :icon="h(DeleteOutlined)"
-            block
-            danger
-            type="link"
-            @click="handleDelete(row)"
-          >
-            {{ $t('AbpUi.Delete') }}
+        <div class="basis-1/2">
+          <Button block type="link" @click="handleFetchWBLAppearanceInfo(row)">
+            {{ $t('jx3.fetchWBLAppearanceInfo') }}
           </Button>
-        </div> -->
+        </div>
       </div>
     </template>
   </Grid>
