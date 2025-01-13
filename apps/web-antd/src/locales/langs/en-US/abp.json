@@ -28,5 +28,7 @@
     "authorizations": "Authorizations",
     "scopes": "Scopes",
     "tokens": "Tokens"
-  }
+  },
+  "creationTime": "Creation Time",
+  "lastModificationTime": "Last Modification Time"
 }

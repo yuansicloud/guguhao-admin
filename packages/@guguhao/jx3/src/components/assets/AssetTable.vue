@@ -13,6 +13,7 @@ import { $t } from '@vben/locales';
 import { useVbenVxeGrid } from '@abp/ui';
 import { EditOutlined } from '@ant-design/icons-vue';
 import { Button, Tag } from 'ant-design-vue';
+import dayjs from 'dayjs';
 
 import { getPagedListApi } from '../../api/assets';
 import { useAssets } from '../../hooks/useAssets';
@@ -27,7 +28,7 @@ const AssetModal = defineAsyncComponent(() => import('./AssetModal.vue'));
 const CheckIcon = createIconifyIcon('ant-design:check-outlined');
 const CloseIcon = createIconifyIcon('ant-design:close-outlined');
 
-const sorting = ref<null | string>(null);
+const sorting = ref<string | undefined>(undefined);
 
 const valueTypeOptions = Object.keys(assetTypeDisplayMap).map((key) => {
   const assetType = assetTypeDisplayMap[Number(key) as AssetType];
@@ -108,6 +109,77 @@ const gridOptions: VxeGridProps<AssetDto> = {
       field: 'isUnique',
       slots: { default: 'isUnique' },
       title: $t('JX3.AssetIsUnique'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'wblName',
+      sortable: true,
+      title: $t('JX3.AssetWBLName'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'category',
+      sortable: true,
+      title: $t('JX3.AssetCategory'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'subType',
+      sortable: true,
+      title: $t('JX3.AssetSubType'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'getSource',
+      sortable: true,
+      title: $t('JX3.AssetGetSource'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'officialSaleDate',
+      slots: {
+        default: ({ row }) => {
+          return row.officialSaleDate && dayjs(row.officialSaleDate).isValid()
+            ? dayjs(row.officialSaleDate).format('YYYY-MM-DD')
+            : '';
+        },
+      },
+      sortable: true,
+      title: $t('JX3.AssetOfficialSaleDate'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'creationTime',
+      slots: {
+        default: ({ row }) => {
+          return row.creationTime && dayjs(row.creationTime).isValid()
+            ? dayjs(row.creationTime).format('YYYY-MM-DD')
+            : '';
+        },
+      },
+      sortable: true,
+      title: $t('abp.creationTime'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'lastModificationTime',
+      slots: {
+        default: ({ row }) => {
+          return row.lastModificationTime &&
+            dayjs(row.lastModificationTime).isValid()
+            ? dayjs(row.lastModificationTime).format('YYYY-MM-DD')
+            : '';
+        },
+      },
+      sortable: true,
+      title: $t('abp.lastModificationTime'),
       width: 'auto',
     },
     {
