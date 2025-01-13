@@ -11,11 +11,15 @@ import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { EditOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { fetchWBLAppearanceInfoApi, getPagedListApi } from '../../api/assets';
+import {
+  deleteApi,
+  fetchWBLAppearanceInfoApi,
+  getPagedListApi,
+} from '../../api/assets';
 import { useAssets } from '../../hooks/useAssets';
 import { AssetType } from '../../types/assets';
 
@@ -99,43 +103,25 @@ const gridOptions: VxeGridProps<AssetDto> = {
     },
     {
       align: 'center',
-      field: 'isHighValue',
-      slots: { default: 'isHighValue' },
-      title: $t('JX3.AssetIsHighValue'),
-      width: 'auto',
-    },
-    {
-      align: 'center',
-      field: 'isUnique',
-      slots: { default: 'isUnique' },
-      title: $t('JX3.AssetIsUnique'),
-      width: 'auto',
-    },
-    {
-      align: 'center',
       field: 'wblName',
-      sortable: true,
       title: $t('JX3.AssetWBLName'),
       width: 'auto',
     },
     {
       align: 'center',
       field: 'category',
-      sortable: true,
       title: $t('JX3.AssetCategory'),
       width: 'auto',
     },
     {
       align: 'center',
       field: 'subType',
-      sortable: true,
       title: $t('JX3.AssetSubType'),
       width: 'auto',
     },
     {
       align: 'center',
       field: 'getSource',
-      sortable: true,
       title: $t('JX3.AssetGetSource'),
       width: 'auto',
     },
@@ -190,11 +176,25 @@ const gridOptions: VxeGridProps<AssetDto> = {
       width: 200,
     },
     {
+      align: 'center',
+      field: 'isHighValue',
+      slots: { default: 'isHighValue' },
+      title: $t('JX3.AssetIsHighValue'),
+      width: 'auto',
+    },
+    {
+      align: 'center',
+      field: 'isUnique',
+      slots: { default: 'isUnique' },
+      title: $t('JX3.AssetIsUnique'),
+      width: 'auto',
+    },
+    {
       field: 'action',
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('AbpUi.Actions'),
-      width: 180,
+      width: 300,
     },
   ],
   exportConfig: {},
@@ -255,6 +255,19 @@ const handleEdit = (row: AssetDto) => {
   roleModalApi.open();
 };
 
+const handleDelete = (row: AssetDto) => {
+  Modal.confirm({
+    centered: true,
+    content: $t('abp.WillDelete', [row.name]),
+    onOk: async () => {
+      await deleteApi(row.id);
+      message.success($t('AbpUi.SuccessfullyDeleted'));
+      query();
+    },
+    title: $t('AbpUi.AreYouSure'),
+  });
+};
+
 const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
   Modal.confirm({
     centered: true,
@@ -295,7 +308,7 @@ const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
     </template>
     <template #action="{ row }">
       <div class="flex flex-row">
-        <div class="basis-1/2">
+        <div class="basis-1/3">
           <Button
             :icon="h(EditOutlined)"
             block
@@ -305,9 +318,26 @@ const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
             {{ $t('AbpUi.Edit') }}
           </Button>
         </div>
-        <div class="basis-1/2">
-          <Button block type="link" @click="handleFetchWBLAppearanceInfo(row)">
+        <div class="basis-1/3">
+          <Button
+            :icon="h(EditOutlined)"
+            block
+            type="link"
+            class="text-warning"
+            @click="handleFetchWBLAppearanceInfo(row)"
+          >
             {{ $t('jx3.fetchWBLAppearanceInfo') }}
+          </Button>
+        </div>
+        <div class="basis-1/3">
+          <Button
+            :icon="h(DeleteOutlined)"
+            block
+            type="link"
+            danger
+            @click="handleDelete(row)"
+          >
+            {{ $t('AbpUi.Delete') }}
           </Button>
         </div>
       </div>

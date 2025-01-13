@@ -30,5 +30,6 @@
     "tokens": "Tokens"
   },
   "creationTime": "Creation Time",
-  "lastModificationTime": "Last Modification Time"
+  "lastModificationTime": "Last Modification Time",
+  "WillDelete" : "Are you sure to delete {0}"
 }
