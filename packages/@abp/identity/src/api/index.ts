@@ -1,6 +1,6 @@
-export * as claimTypesApi from './claim-types';
-export * as organizationUnitsApi from './organization-units';
-export * as rolesApi from './roles';
-export * as securityLogsApi from './security-logs';
-export * as usersApi from './users';
-export * as userLookupApi from './users-lookup';
+export { useClaimTypesApi } from './useClaimTypesApi';
+export { useOrganizationUnitsApi } from './useOrganizationUnitsApi';
+export { useRolesApi } from './useRolesApi';
+export { useSecurityLogsApi } from './useSecurityLogsApi';
+export { useUserLookupApi } from './useUserLookupApi';
+export { useUsersApi } from './useUsersApi';

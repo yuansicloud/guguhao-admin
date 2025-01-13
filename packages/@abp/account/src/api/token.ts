@@ -16,7 +16,7 @@ import { requestClient } from '@abp/request';
 export async function loginApi(
   request: PasswordTokenRequestModel,
 ): Promise<TokenResult> {
-  const { clientId, clientSecret } = useAppConfig(
+  const { clientId, clientSecret, authURL } = useAppConfig(
     import.meta.env,
     import.meta.env.PROD,
   );
@@ -33,6 +33,7 @@ export async function loginApi(
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
+      baseURL: authURL,
     },
   );
   return {

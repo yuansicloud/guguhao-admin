@@ -11,12 +11,14 @@ export interface VbenAdminProAppConfigRaw {
   VITE_GLOB_API_URL: string;
   VITE_GLOB_CLIENT_ID: string;
   VITE_GLOB_CLIENT_SECRET: string;
+  VITE_GLOB_AUTH_URL: string;
 }
 
 export interface ApplicationConfig {
   apiURL: string;
   clientId: string;
   clientSecret: string;
+  authURL: string;
 }
 
 declare global {

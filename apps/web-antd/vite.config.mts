@@ -11,6 +11,7 @@ export default defineConfig(async () => {
             // rewrite: (path) => path.replace(/^\/api/, ''),
             // mock代理目标地址
             target: 'https://authserver.yuansicloud.com/',
+            secure: true,
             ws: true,
           },
           '/api': {
@@ -18,6 +19,7 @@ export default defineConfig(async () => {
             // rewrite: (path) => path.replace(/^\/api/, ''),
             // mock代理目标地址
             target: 'https://api.guguhao.com/',
+            secure: true,
             ws: true,
           },
           '/connect': {
@@ -25,6 +27,7 @@ export default defineConfig(async () => {
             // rewrite: (path) => path.replace(/^\/api/, ''),
             // mock代理目标地址
             target: 'https://authserver.yuansicloud.com/',
+            secure: true,
             ws: true,
           },
         },
