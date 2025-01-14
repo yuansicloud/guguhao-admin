@@ -290,7 +290,10 @@ async function onLoadOuChildren(node: EventDataNode) {
               height: '338px',
             }"
             :render="(item) => item.title"
-            :titles="['可选', '已有']"
+            :titles="[
+              $t('AbpIdentityServer.Assigned'),
+              $t('AbpIdentityServer.Available'),
+            ]"
             class="tree-transfer"
           />
         </TabPane>

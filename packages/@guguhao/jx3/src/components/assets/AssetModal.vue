@@ -202,7 +202,7 @@ function onDateChange(e: any) {
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetWBLName')" name="wblName">
-        <Input v-model:value="formModel.wblName" readonly />
+        <Input v-model:value="formModel.wblName" />
       </FormItem>
     </Form>
   </Modal>

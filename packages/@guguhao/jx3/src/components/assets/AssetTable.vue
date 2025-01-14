@@ -63,6 +63,18 @@ const formOptions: VbenFormProps = {
       formItemClass: 'col-span-1 items-baseline',
       label: $t('JX3.AssetAssetType'),
     },
+    {
+      component: 'InputNumber',
+      fieldName: 'minPrice',
+      label: '最小价格',
+      labelWidth: 100,
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'maxPrice',
+      label: '最大价格',
+      labelWidth: 100,
+    },
   ],
   // 控制表单是否显示折叠按钮
   showCollapseButton: true,
