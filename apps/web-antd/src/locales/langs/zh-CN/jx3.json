@@ -1,8 +1,10 @@
 {
   "Create": "新增",
-  "assets": "外观",
-  "title": "剑网三",
-  "fetchWBLAppearanceInfo": "刷新数据",
+  "Merge": "合并",
+  "RequireTwo": "请选择2条数据",
+  "SuccessRefresh": "成功刷新",
   "WillRefreshAppearance": "是否确定从万宝楼获取数据进行刷新",
-  "SuccessRefresh": "成功刷新"
+  "assets": "外观",
+  "fetchWBLAppearanceInfo": "刷新数据",
+  "title": "剑网三"
 }

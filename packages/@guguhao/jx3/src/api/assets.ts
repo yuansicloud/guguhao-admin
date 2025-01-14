@@ -4,6 +4,7 @@ import type {
   AssetDto,
   AssetGetListInput,
   CreateUpdateAssetDto,
+  MergeAssetsInput,
 } from '../types/assets';
 
 import { requestClient } from '@abp/request';
@@ -63,4 +64,12 @@ export function deleteApi(id: string): Promise<void> {
  */
 export function fetchWBLAppearanceInfoApi(id: string): Promise<void> {
   return requestClient.post(`/api/jx3/asset/${id}/fetch-wblAppearance-info`);
+}
+
+/**
+ * 合并外观
+ * @param input 参数
+ */
+export function mergeAssets(input: MergeAssetsInput): Promise<void> {
+  return requestClient.post(`/api/jx3/asset/merge-assets`, input);
 }

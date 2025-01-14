@@ -29,11 +29,13 @@ defineOptions({
 const { assetTypeDisplayMap, getAssetTypeColor, getAssetTypeValue } =
   useAssets();
 const AssetModal = defineAsyncComponent(() => import('./AssetModal.vue'));
+const AssetMergeModal = defineAsyncComponent(
+  () => import('./AssetMergeModal.vue'),
+);
 const CheckIcon = createIconifyIcon('ant-design:check-outlined');
 const CloseIcon = createIconifyIcon('ant-design:close-outlined');
 
 const sorting = ref<string | undefined>(undefined);
-
 const valueTypeOptions = Object.keys(assetTypeDisplayMap).map((key) => {
   const assetType = assetTypeDisplayMap[Number(key) as AssetType];
   return {
@@ -83,10 +85,16 @@ const formOptions: VbenFormProps = {
 };
 
 const gridOptions: VxeGridProps<AssetDto> = {
+  border: true,
   columnConfig: {
     resizable: true,
   },
   columns: [
+    {
+      align: 'center',
+      type: 'checkbox', // Adds a checkbox for row selection
+      width: 60,
+    },
     {
       align: 'center',
       field: 'name',
@@ -101,6 +109,13 @@ const gridOptions: VxeGridProps<AssetDto> = {
     },
     {
       align: 'center',
+      field: 'assetType',
+      slots: { default: 'assetType' },
+      title: $t('JX3.AssetAssetType'),
+      width: '100',
+    },
+    {
+      align: 'center',
       field: 'price',
       sortable: true,
       title: $t('JX3.AssetPrice'),
@@ -108,10 +123,10 @@ const gridOptions: VxeGridProps<AssetDto> = {
     },
     {
       align: 'center',
-      field: 'assetType',
-      slots: { default: 'assetType' },
-      title: $t('JX3.AssetAssetType'),
-      width: '100',
+      field: 'adjustedPrice',
+      sortable: true,
+      title: $t('JX3.AssetAdjustedPrice'),
+      width: 'auto',
     },
     {
       align: 'center',
@@ -227,6 +242,7 @@ const gridOptions: VxeGridProps<AssetDto> = {
       list: 'items',
     },
   },
+  stripe: true,
   toolbarConfig: {
     custom: true,
     export: true,
@@ -241,11 +257,15 @@ const gridEvents: VxeGridListeners<AssetDto> = {
   sortChange: onSort,
 };
 
-const [AssetEditModal, roleModalApi] = useVbenModal({
+const [AssetEditModal, createUpdateModalApi] = useVbenModal({
   connectedComponent: AssetModal,
 });
 
-const [Grid, { query }] = useVbenVxeGrid({
+const [AssetMergingModal, mergeModalApi] = useVbenModal({
+  connectedComponent: AssetMergeModal,
+});
+
+const [Grid, gridApi] = useVbenVxeGrid({
   formOptions,
   gridEvents,
   gridOptions,
@@ -254,17 +274,17 @@ const [Grid, { query }] = useVbenVxeGrid({
 function onSort(params: { field: string; order: SortOrder }) {
   const sort = params.order ? `${params.field} ${params.order}` : undefined;
   sorting.value = sort;
-  query();
+  gridApi.query();
 }
 
 const handleAdd = () => {
-  roleModalApi.setData({});
-  roleModalApi.open();
+  createUpdateModalApi.setData({});
+  createUpdateModalApi.open();
 };
 
 const handleEdit = (row: AssetDto) => {
-  roleModalApi.setData(row);
-  roleModalApi.open();
+  createUpdateModalApi.setData(row);
+  createUpdateModalApi.open();
 };
 
 const handleDelete = (row: AssetDto) => {
@@ -274,7 +294,7 @@ const handleDelete = (row: AssetDto) => {
     onOk: async () => {
       await deleteApi(row.id);
       message.success($t('AbpUi.SuccessfullyDeleted'));
-      query();
+      gridApi.query();
     },
     title: $t('AbpUi.AreYouSure'),
   });
@@ -287,10 +307,23 @@ const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
     onOk: async () => {
       await fetchWBLAppearanceInfoApi(row.id);
       message.success($t('jx3.SuccessRefresh'));
-      query();
+      gridApi.query();
     },
     title: $t('AbpUi.AreYouSure'),
   });
+};
+
+const getCheckedRows = async () => {
+  const selectedRows = gridApi.grid.getCheckboxRecords();
+  if (selectedRows.length !== 2) {
+    message.error($t('jx3.RequireTwo'));
+    return;
+  }
+  mergeModalApi.setData({
+    destinationAsset: selectedRows[1],
+    originalAsset: selectedRows[0],
+  });
+  mergeModalApi.open();
 };
 </script>
 
@@ -299,6 +332,9 @@ const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
     <template #toolbar-tools>
       <Button type="primary" @click="handleAdd">
         {{ $t('AbpUi.AddNew') }}
+      </Button>
+      <Button type="default" @click="getCheckedRows" class="ml-2">
+        {{ $t('jx3.Merge') }}
       </Button>
     </template>
     <template #isHighValue="{ row }">
@@ -355,7 +391,8 @@ const handleFetchWBLAppearanceInfo = (row: AssetDto) => {
       </div>
     </template>
   </Grid>
-  <AssetEditModal @change="() => query()" />
+  <AssetEditModal @change="() => gridApi.query()" />
+  <AssetMergingModal @change="() => gridApi.query()" />
 </template>
 
 <style lang="scss" scoped></style>

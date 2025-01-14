@@ -1,151 +1,166 @@
-import type {
-  PagedAndSortedResultRequestDto,
-} from '@abp/core';
+import type { PagedAndSortedResultRequestDto } from '@abp/core';
+
+export enum AssetType {
+  // / 奇遇
+  Adventure = 4,
+
+  // / <summary>
+  // / 背部挂件
+  // / </summary>
+  Back = 14,
+
+  // / <summary>
+  // / 披风
+  // / </summary>
+  BackCloak = 22,
+
+  // / <summary>
+  // / 佩囊
+  // / </summary>
+  Bag = 24,
+
+  // / <summary>
+  // / 外装收集 - 只记录数量
+  // / </summary>
+  Exterior = 0,
+
+  // / <summary>
+  // / 面部挂件
+  // / </summary>
+  Face = 17,
+
+  // / <summary>
+  // / 眼饰
+  // / </summary>
+  Glasses = 26,
+
+  // / <summary>
+  // / 发型
+  // / </summary>
+  Hair = 2,
+
+  // / <summary>
+  // / 坐骑
+  // / </summary>
+  Horse = 15,
+
+  // / <summary>
+  // / 左手饰
+  // / </summary>
+  LeftLovePendent = 27,
+
+  // / <summary>
+  // / 左肩饰
+  // / </summary>
+  LeftShoudler = 20,
+
+  // / <summary>
+  // / 小头像
+  // / </summary>
+  MiniAvatar = 3,
+
+  // / 跟宠
+  Pals = 5,
+
+  // / <summary>
+  // / 挂宠
+  // / </summary>
+  Pet = 25,
+
+  // / <summary>
+  // / 右手饰
+  // / </summary>
+  RightLovePendent = 28,
+
+  // / <summary>
+  // / 右肩饰
+  // / </summary>
+  RightShoudler = 21,
+
+  // / <summary>
+  // / 商城外观
+  // / </summary>
+  ShopExterior = 1,
+
+  // / <summary>
+  // / 未知
+  // / </summary>
+  Unknown = -1,
+
+  // / <summary>
+  // / 腰部挂件
+  // / </summary>
+  Waist = 11,
+
+  // / <summary>
+  // / 武器拓印
+  // / </summary>
+  Weapon = 6,
+}
 
 interface AssetDto {
+  adjustedPrice?: number;
+  alias?: string;
+  assetType: AssetType;
+  avatar?: string;
+  category?: string;
   creationTime: Date;
   creatorId?: string;
+  description?: string;
+  getSource?: number;
+  id: string;
+  isHighValue: boolean;
+  isUnique: boolean;
   lastModificationTime?: string;
   lastModifierId?: string;
-  name: string;
-  alias?: string;
-  avatar?: string;
   mediaResources?: string;
-  assetType: AssetType;
-  subType?: string;
-  isHighValue: boolean;
-  id: string;
-  isUnique: boolean;
-  price?: number;
-  category?: string;
+  name: string;
   officialSaleDate?: string;
-  getSource?: number;
-  description?: string;
+  price?: number;
+  subType?: string;
   wblName?: string;
 }
 
 interface CreateUpdateAssetDto {
-  name: string;
+  adjustedPrice?: number;
   alias?: string;
-  avatar?: string;
-  mediaResources?: string;
   assetType: AssetType;
-  subType?: string;
+  avatar?: string;
+  category?: string;
+  description?: string;
+  getSource?: number;
   isHighValue: boolean;
   isUnique: boolean;
-  price?: number;
-  category?: string;
+  mediaResources?: string;
+  name: string;
   officialSaleDate?: string;
-  getSource?: number;
-  description?: string;
+  price?: number;
+  subType?: string;
   wblName?: string;
 }
 
 interface AssetGetListInput extends PagedAndSortedResultRequestDto {
-  filter?: string;
   assetType?: AssetType;
-  MinPrice?: number;
-  MaxPrice?: number;
+  filter?: string;
   IsHighValue?: boolean;
+  MaxPrice?: number;
+  MinPrice?: number;
 }
 
-export enum AssetType
-{
-    /// <summary>
-    /// 未知
-    /// </summary>
-    Unknown = -1,
-
-    /// <summary>
-    /// 外装收集 - 只记录数量
-    /// </summary>
-    Exterior = 0,
-
-    /// <summary>
-    /// 商城外观
-    /// </summary>
-    ShopExterior = 1,
-
-    /// <summary>
-    /// 发型
-    /// </summary>
-    Hair = 2,
-
-    /// <summary>
-    /// 小头像
-    /// </summary>
-    MiniAvatar = 3,
-
-    /// 奇遇
-    Adventure = 4,
-
-    /// 跟宠
-    Pals = 5,
-
-    /// <summary>
-    /// 武器拓印
-    /// </summary>
-    Weapon = 6,
-
-    /// <summary>
-    /// 腰部挂件
-    /// </summary>
-    Waist = 11,
-
-    /// <summary>
-    /// 背部挂件
-    /// </summary>
-    Back = 14,
-
-    /// <summary>
-    /// 坐骑
-    /// </summary>
-    Horse = 15,
-
-    /// <summary>
-    /// 面部挂件
-    /// </summary>
-    Face = 17,
-
-    /// <summary>
-    /// 左肩饰
-    /// </summary>
-    LeftShoudler = 20,
-
-    /// <summary>
-    /// 右肩饰
-    /// </summary>
-    RightShoudler = 21,
-
-    /// <summary>
-    /// 披风
-    /// </summary>
-    BackCloak = 22,
-
-    /// <summary>
-    /// 佩囊
-    /// </summary>
-    Bag = 24,
-
-    /// <summary>
-    /// 挂宠
-    /// </summary>
-    Pet = 25,
-
-    /// <summary>
-    /// 眼饰
-    /// </summary>
-    Glasses = 26,
-
-    /// <summary>
-    /// 左手饰
-    /// </summary>
-    LeftLovePendent = 27,
-
-    /// <summary>
-    /// 右手饰
-    /// </summary>
-    RightLovePendent = 28
+interface MergeAssetsDto {
+  destinationAsset: AssetDto;
+  originalAsset: AssetDto;
 }
 
-export type { AssetDto, AssetGetListInput, CreateUpdateAssetDto };
+interface MergeAssetsInput {
+  destinationAssetId: string;
+  originalAssetId: string;
+}
+
+export type {
+  AssetDto,
+  AssetGetListInput,
+  CreateUpdateAssetDto,
+  MergeAssetsDto,
+  MergeAssetsInput,
+};

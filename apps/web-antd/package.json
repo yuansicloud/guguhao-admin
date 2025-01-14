@@ -28,7 +28,6 @@
   "dependencies": {
     "@guguhao/jx3": "workspace:*",
     "@abp/account": "workspace:*",
-    "@abp/auditing": "workspace:*",
     "@abp/core": "workspace:*",
     "@abp/identity": "workspace:*",
     "@abp/openiddict": "workspace:*",

@@ -31,5 +31,7 @@
   },
   "creationTime": "Creation Time",
   "lastModificationTime": "Last Modification Time",
-  "WillDelete" : "Are you sure to delete {0}"
+  "WillDelete" : "Are you sure to delete {0}",
+  "Available" : "Available",
+  "Assigned": "Assigned"
 }

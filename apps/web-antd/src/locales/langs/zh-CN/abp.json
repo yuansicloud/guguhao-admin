@@ -32,5 +32,7 @@
   "title": "Abp框架",
   "creationTime": "创建时间",
   "lastModificationTime": "更新时间",
-  "WillDelete" : "是否确认删除{0}"
+  "WillDelete" : "是否确认删除{0}",
+  "Available" : "可选",
+  "Assigned": "已有"
 }

@@ -1,6 +1,8 @@
 {
-  "assets": "assets",
-  "fetchWBLAppearanceInfo": "fetch WBL",
+  "Merge": "Merge",
+  "RequireTwo": "select 2 records",
+  "SuccessRefresh": "Success Refresh",
   "WillRefreshAppearance": "Will Refresh Appearance",
-  "SuccessRefresh": "Success Refresh"
+  "assets": "assets",
+  "fetchWBLAppearanceInfo": "fetch WBL"
 }

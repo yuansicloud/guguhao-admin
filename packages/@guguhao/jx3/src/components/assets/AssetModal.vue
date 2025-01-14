@@ -65,7 +65,7 @@ const [Modal, modalApi] = useVbenModal({
     modalApi.setState({ loading: true });
     api
       .then((res) => {
-        message.success($t('AbpUi.Success'));
+        message.success($t('AbpUi.SavedSuccessfully'));
         emits('change', res);
         modalApi.close();
       })
@@ -168,6 +168,13 @@ function onDateChange(e: any) {
 
       <FormItem :label="$t('JX3.AssetPrice')" name="price">
         <InputNumber v-model:value="formModel.price" style="width: 100%" />
+      </FormItem>
+
+      <FormItem :label="$t('JX3.AssetAdjustedPrice')" name="price">
+        <InputNumber
+          v-model:value="formModel.adjustedPrice"
+          style="width: 100%"
+        />
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetCategory')" name="category">
