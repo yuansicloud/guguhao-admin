@@ -79,7 +79,7 @@ onMounted(async () => {
     },
     {
       icon: markRaw(SvgCakeIcon),
-      title: '金日访问量',
+      title: '今日访问量',
       totalTitle: '周总访问量',
       totalValue: weekData.summarizedData.value,
       value: weekData.detailData[weekData.detailData.length - 1].value,

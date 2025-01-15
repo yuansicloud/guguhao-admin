@@ -10,7 +10,6 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import {
-  AnalysisChartCard,
   WorkbenchHeader,
   WorkbenchProject,
   WorkbenchQuickNav,
@@ -21,7 +20,7 @@ import { preferences } from '@vben/preferences';
 import { useUserStore } from '@vben/stores';
 import { openWindow } from '@vben/utils';
 
-import AnalyticsVisitsSource from '../analytics/analytics-visits-source.vue';
+import { $t } from '#/locales';
 
 const userStore = useUserStore();
 
@@ -31,60 +30,50 @@ const userStore = useUserStore();
 const projectItems: WorkbenchProjectItem[] = [
   {
     color: '',
-    content: '不要等待机会，而要创造机会。',
-    date: '2021-04-01',
-    group: '开源组',
-    icon: 'carbon:logo-github',
-    title: 'Github',
-    url: 'https://github.com',
+    content: '移动端估计平台。',
+    date: '2025-01-15',
+    group: 'JX3',
+    icon: 'https://www.guguhao.com/static/images/logo.png',
+    title: $t('jx3.guguhao'),
+    url: 'https://www.guguhao.com/',
   },
   {
-    color: '#3fb27f',
-    content: '现在的你决定将来的你。',
-    date: '2021-04-01',
-    group: '算法组',
-    icon: 'ion:logo-vue',
-    title: 'Vue',
-    url: 'https://vuejs.org',
+    color: '',
+    content: '万宝楼官方平台',
+    date: '2025-01-15',
+    group: 'JX3',
+    icon: 'https://jx3.seasunwbl.com/favicon.ico',
+    title: $t('jx3.WBL'),
+    url: 'https://jx3.seasunwbl.com/',
   },
   {
-    color: '#e18525',
-    content: '没有什么才能比努力更重要。',
-    date: '2021-04-01',
-    group: '上班摸鱼',
-    icon: 'ion:logo-html5',
-    title: 'Html5',
-    url: 'https://developer.mozilla.org/zh-CN/docs/Web/HTML',
+    color: '',
+    content: '剑三商会搜号平台',
+    date: '2025-01-15',
+    group: 'JX3',
+    icon: 'https://pc.jx3sh.com/favicon.ico',
+    title: $t('jx3.J3SH'),
+    url: 'https://pc.jx3sh.com/#/wbl',
   },
   {
-    color: '#bf0c2c',
-    content: '热情和欲望可以突破一切难关。',
-    date: '2021-04-01',
-    group: 'UI',
-    icon: 'ion:logo-angular',
-    title: 'Angular',
-    url: 'https://angular.io',
+    color: '',
+    content: '爱剑三搜号平台',
+    date: '2025-01-15',
+    group: 'JX3',
+    icon: 'https://www.aijx3.cn/favicon.ico',
+    title: $t('jx3.AIJX3'),
+    url: 'https://www.aijx3.cn/',
   },
   {
-    color: '#00d8ff',
-    content: '健康的身体是实现目标的基石。',
-    date: '2021-04-01',
-    group: '技术牛',
-    icon: 'bx:bxl-react',
-    title: 'React',
-    url: 'https://reactjs.org',
-  },
-  {
-    color: '#EBD94E',
-    content: '路是走出来的，而不是空想出来的。',
-    date: '2021-04-01',
-    group: '架构组',
-    icon: 'ion:logo-javascript',
-    title: 'Js',
-    url: 'https://developer.mozilla.org/zh-CN/docs/Web/JavaScript',
+    color: '',
+    content: '外观物价搜索平台',
+    date: '2025-01-15',
+    group: 'JX3',
+    icon: 'https://www.jx3search.com/favicon.ico',
+    title: $t('jx3.JX3Search'),
+    url: 'https://www.jx3search.com/',
   },
 ];
-
 // 同样，这里的 url 也可以使用以 http 开头的外部链接
 const quickNavItems: WorkbenchQuickNavItem[] = [
   {
@@ -100,117 +89,51 @@ const quickNavItems: WorkbenchQuickNavItem[] = [
     url: '/dashboard',
   },
   {
-    color: '#e18525',
-    icon: 'ion:layers-outline',
-    title: '组件',
-    url: '/demos/features/icons',
-  },
-  {
     color: '#3fb27f',
     icon: 'ion:settings-outline',
-    title: '系统管理',
-    url: '/demos/features/login-expired', // 这里的 URL 是示例，实际项目中需要根据实际情况进行调整
+    title: ' 用户管理',
+    url: '/manage/identity/users', // 这里的 URL 是示例，实际项目中需要根据实际情况进行调整
   },
   {
     color: '#4daf1bc9',
     icon: 'ion:key-outline',
     title: '权限管理',
-    url: '/demos/access/page-control',
+    url: '/manage/identity/roles',
   },
   {
     color: '#00d8ff',
     icon: 'ion:bar-chart-outline',
-    title: '图表',
-    url: '/analytics',
+    title: '剑三外观',
+    url: '/assets',
+  },
+  {
+    color: '#e18525',
+    icon: 'ion:layers-outline',
+    title: '角色',
+    url: '/assets',
   },
 ];
 
 const todoItems = ref<WorkbenchTodoItem[]>([
   {
     completed: false,
-    content: `审查最近提交到Git仓库的前端代码，确保代码质量和规范。`,
-    date: '2024-07-30 11:00:00',
-    title: '审查前端代码提交',
+    content: `剑三角色查询，刷新`,
+    date: '2025-01-10 11:00:00',
+    title: '剑三角色模块',
   },
   {
     completed: true,
-    content: `检查并优化系统性能，降低CPU使用率。`,
-    date: '2024-07-30 11:00:00',
-    title: '系统性能优化',
-  },
-  {
-    completed: false,
-    content: `进行系统安全检查，确保没有安全漏洞或未授权的访问。 `,
-    date: '2024-07-30 11:00:00',
-    title: '安全检查',
-  },
-  {
-    completed: false,
-    content: `更新项目中的所有npm依赖包，确保使用最新版本。`,
-    date: '2024-07-30 11:00:00',
-    title: '更新项目依赖',
-  },
-  {
-    completed: false,
-    content: `修复用户报告的页面UI显示问题，确保在不同浏览器中显示一致。 `,
-    date: '2024-07-30 11:00:00',
-    title: '修复UI显示问题',
+    content: `剑三外观查询，新增，编辑及删除`,
+    date: '2025-01-10 11:00:00',
+    title: '剑三外观模块',
   },
 ]);
 const trendItems: WorkbenchTrendItem[] = [
   {
-    avatar: 'svg:avatar-1',
-    content: `在 <a>开源组</a> 创建了项目 <a>Vue</a>`,
-    date: '刚刚',
-    title: '威廉',
-  },
-  {
     avatar: 'svg:avatar-2',
-    content: `关注了 <a>威廉</a> `,
+    content: `写代码写吐了, <a>回家</a> `,
     date: '1个小时前',
-    title: '艾文',
-  },
-  {
-    avatar: 'svg:avatar-3',
-    content: `发布了 <a>个人动态</a> `,
-    date: '1天前',
-    title: '克里斯',
-  },
-  {
-    avatar: 'svg:avatar-4',
-    content: `发表文章 <a>如何编写一个Vite插件</a> `,
-    date: '2天前',
-    title: 'Vben',
-  },
-  {
-    avatar: 'svg:avatar-1',
-    content: `回复了 <a>杰克</a> 的问题 <a>如何进行项目优化？</a>`,
-    date: '3天前',
-    title: '皮特',
-  },
-  {
-    avatar: 'svg:avatar-2',
-    content: `关闭了问题 <a>如何运行项目</a> `,
-    date: '1周前',
-    title: '杰克',
-  },
-  {
-    avatar: 'svg:avatar-3',
-    content: `发布了 <a>个人动态</a> `,
-    date: '1周前',
-    title: '威廉',
-  },
-  {
-    avatar: 'svg:avatar-4',
-    content: `推送了代码到 <a>Github</a>`,
-    date: '2021-04-01 20:00',
-    title: '威廉',
-  },
-  {
-    avatar: 'svg:avatar-4',
-    content: `发表文章 <a>如何编写使用 Admin Vben</a> `,
-    date: '2021-03-01 20:00',
-    title: 'Vben',
+    title: '鱼鱼',
   },
 ];
 
@@ -256,10 +179,7 @@ function navTo(nav: WorkbenchProjectItem | WorkbenchQuickNavItem) {
           title="快捷导航"
           @click="navTo"
         />
-        <WorkbenchTodo :items="todoItems" class="mt-5" title="待办事项" />
-        <AnalysisChartCard class="mt-5" title="访问来源">
-          <AnalyticsVisitsSource />
-        </AnalysisChartCard>
+        <WorkbenchTodo :items="todoItems" class="mt-5" title="功能Roadmap" />
       </div>
     </div>
   </div>

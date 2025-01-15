@@ -97,8 +97,8 @@ export const useAuthStore = defineStore('auth', () => {
     const abpConfig = await getConfigApi();
     userInfo = {
       userId: userInfoRes.sub,
-      username: userInfoRes.uniqueName,
-      realName: userInfoRes.name,
+      username: userInfoRes.name,
+      realName: userInfoRes.nickname,
       avatar: userInfoRes.avatarUrl ?? userInfoRes.picture,
       desc: userInfoRes.uniqueName ?? userInfoRes.name,
       email: userInfoRes.email ?? userInfoRes.email,
