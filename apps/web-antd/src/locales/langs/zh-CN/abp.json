@@ -1,5 +1,10 @@
 {
+  "Assigned": "已有",
+  "Available": "可选",
+  "WillDelete": "是否确认删除{0}",
   "assets": "外观",
+  "creationTime": "创建时间",
+  "lastModificationTime": "更新时间",
   "manage": {
     "identity": {
       "auditLogs": "审计日志",
@@ -29,10 +34,6 @@
     "title": "OpenIddict",
     "tokens": "授权令牌"
   },
-  "title": "Abp框架",
-  "creationTime": "创建时间",
-  "lastModificationTime": "更新时间",
-  "WillDelete" : "是否确认删除{0}",
-  "Available" : "可选",
-  "Assigned": "已有"
+  "system": "系统",
+  "title": "Abp框架"
 }

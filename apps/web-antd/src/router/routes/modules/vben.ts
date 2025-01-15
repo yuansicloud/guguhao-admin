@@ -1,12 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import {
-  VBEN_DOC_URL,
-  VBEN_ELE_PREVIEW_URL,
-  VBEN_GITHUB_URL,
-  VBEN_LOGO_URL,
-  VBEN_NAIVE_PREVIEW_URL,
-} from '@vben/constants';
+import { VBEN_LOGO_URL } from '@vben/constants';
 
 import { IFrameView } from '#/layouts';
 import { $t } from '#/locales';
@@ -17,64 +11,62 @@ const routes: RouteRecordRaw[] = [
       badgeType: 'dot',
       icon: VBEN_LOGO_URL,
       order: 9998,
-      title: $t('demos.vben.title'),
+      title: $t('jx3.recommendedProjects'),
     },
-    name: 'VbenProject',
-    path: '/vben-admin',
+    name: 'JX3Project',
+    path: '/jx3-projects',
     children: [
       {
-        name: 'VbenDocument',
-        path: '/vben-admin/document',
+        name: 'GuguhaoWeb',
+        path: '/guguhao-web',
         component: IFrameView,
         meta: {
-          icon: 'lucide:book-open-text',
-          link: VBEN_DOC_URL,
-          title: $t('demos.vben.document'),
+          icon: 'https://www.guguhao.com/static/images/logo.png',
+          link: 'https://www.guguhao.com/',
+          title: $t('jx3.guguhao'),
         },
       },
       {
-        name: 'VbenGithub',
-        path: '/vben-admin/github',
+        name: 'WBL',
+        path: '/wbl',
         component: IFrameView,
         meta: {
-          icon: 'mdi:github',
-          link: VBEN_GITHUB_URL,
-          title: 'Github',
+          icon: 'https://jx3.seasunwbl.com/favicon.ico',
+          link: 'https://jx3.seasunwbl.com/',
+          title: $t('jx3.WBL'),
         },
       },
       {
-        name: 'VbenNaive',
-        path: '/vben-admin/naive',
+        name: 'J3SH',
+        path: '/j3sh',
         component: IFrameView,
         meta: {
-          badgeType: 'dot',
-          icon: 'logos:naiveui',
-          link: VBEN_NAIVE_PREVIEW_URL,
-          title: $t('demos.vben.naive-ui'),
+          icon: 'https://pc.jx3sh.com/favicon.ico',
+          link: 'https://pc.jx3sh.com/#/wbl',
+          title: $t('jx3.J3SH'),
         },
       },
       {
-        name: 'VbenElementPlus',
-        path: '/vben-admin/ele',
+        name: 'AIJJX3',
+        path: '/aijx3',
         component: IFrameView,
         meta: {
-          badgeType: 'dot',
-          icon: 'logos:element',
-          link: VBEN_ELE_PREVIEW_URL,
-          title: $t('demos.vben.element-plus'),
+          icon: 'https://www.aijx3.cn/favicon.ico',
+          link: 'https://www.aijx3.cn/',
+          title: $t('jx3.AIJX3'),
+        },
+      },
+      {
+        name: 'AIJJX3',
+        path: '/aijx3',
+        component: IFrameView,
+        meta: {
+          icon: 'https://www.jx3search.com/favicon.ico',
+          link: 'https://www.jx3search.com/',
+          title: $t('jx3.JX3Search'),
         },
       },
     ],
-  },
-  {
-    name: 'VbenAbout',
-    path: '/vben-admin/about',
-    component: () => import('#/views/_core/about/index.vue'),
-    meta: {
-      icon: 'lucide:copyright',
-      title: $t('demos.vben.about'),
-      order: 9999,
-    },
   },
 ];
 

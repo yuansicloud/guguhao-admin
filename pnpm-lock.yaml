@@ -659,9 +659,6 @@ importers:
       '@abp/account':
         specifier: workspace:*
         version: link:../../packages/@abp/account
-      '@abp/auditing':
-        specifier: workspace:*
-        version: link:../../packages/@abp/auditing
       '@abp/core':
         specifier: workspace:*
         version: link:../../packages/@abp/core

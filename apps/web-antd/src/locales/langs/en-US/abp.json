@@ -1,37 +1,38 @@
 {
-  "title": "Abp Framework",
+  "Assigned": "Assigned",
+  "Available": "Available",
+  "WillDelete": "Are you sure to delete {0}",
+  "creationTime": "Creation Time",
+  "lastModificationTime": "Last Modification Time",
   "manage": {
-    "title": "Manage",
     "identity": {
-      "title": "Identity",
-      "user": "User",
-      "role": "Role",
+      "auditLogs": "Audit Logs",
       "claimTypes": "Claim Types",
-      "securityLogs": "Security Logs",
       "organizationUnits": "Organization Units",
-      "auditLogs": "Audit Logs"
+      "role": "Role",
+      "securityLogs": "Security Logs",
+      "title": "Identity",
+      "user": "User"
     },
     "permissions": {
-      "title": "Permissions",
+      "definitions": "Definitions",
       "groups": "Groups",
-      "definitions": "Definitions"
+      "title": "Permissions"
     },
     "settings": {
-      "title": "Settings",
       "definitions": "Definitions",
-      "system": "System Settings"
-    }
+      "system": "System Settings",
+      "title": "Settings"
+    },
+    "title": "Manage"
   },
   "openiddict": {
-    "title": "OpenIddict",
     "applications": "Applications",
     "authorizations": "Authorizations",
     "scopes": "Scopes",
+    "title": "OpenIddict",
     "tokens": "Tokens"
   },
-  "creationTime": "Creation Time",
-  "lastModificationTime": "Last Modification Time",
-  "WillDelete" : "Are you sure to delete {0}",
-  "Available" : "Available",
-  "Assigned": "Assigned"
+  "system": "System",
+  "title": "Abp Framework"
 }

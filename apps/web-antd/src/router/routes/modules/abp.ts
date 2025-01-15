@@ -9,8 +9,8 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'https://abp.io/assets/favicon.ico/favicon-16x16.png',
       keepAlive: true,
-      order: 1000,
-      title: $t('abp.title'),
+      order: 9999,
+      title: $t('abp.system'),
     },
     name: 'AbpFramework',
     path: '/abp',
