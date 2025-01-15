@@ -21,6 +21,15 @@ async function bootstrap(namespace: string) {
   await initComponentAdapter();
   initRequestClient();
 
+  // // 设置弹窗的默认配置
+  // setDefaultModalProps({
+  //   fullscreenButton: false,
+  // });
+  // // 设置抽屉的默认配置
+  // setDefaultDrawerProps({
+  //   zIndex: 1020,
+  // });
+
   const app = createApp(App);
 
   // 配置 pinia-tore
