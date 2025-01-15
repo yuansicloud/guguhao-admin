@@ -21,6 +21,14 @@ const routes: RouteRecordRaw[] = [
         path: '/assets',
         component: () => import('#/views/jx3/assets/index.vue'),
       },
+      {
+        meta: {
+          title: $t('jx3.characters'),
+        },
+        name: 'JX3Characters',
+        path: '/characters',
+        component: () => import('#/views/jx3/characters/index.vue'),
+      },
     ],
   },
 ];

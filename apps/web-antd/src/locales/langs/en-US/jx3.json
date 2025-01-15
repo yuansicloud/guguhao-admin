@@ -1,5 +1,6 @@
 {
   "AIJX3": "AI JX3",
+  "Create": "Create",
   "J3SH": "J3 Shang Hui",
   "JX3Search": "JX3 Search",
   "Merge": "Merge",
@@ -7,8 +8,11 @@
   "SuccessRefresh": "Success Refresh",
   "WBL": "Wan Bao Lou",
   "WillRefreshAppearance": "Will Refresh Appearance",
+  "WillRefreshCharacter": "Will Refresh Character",
   "assets": "assets",
+  "characters": "character",
   "fetchWBLAppearanceInfo": "fetch WBL",
   "guguhao": "Guguhao",
-  "recommendedProjects": "recommended projects"
+  "recommendedProjects": "recommended projects",
+  "title": "Title"
 }
