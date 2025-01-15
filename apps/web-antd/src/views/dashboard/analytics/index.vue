@@ -2,58 +2,103 @@
 import type { AnalysisOverviewItem } from '@vben/common-ui';
 import type { TabOption } from '@vben/types';
 
+import { markRaw, onMounted, ref } from 'vue';
+
 import {
   AnalysisChartCard,
   AnalysisChartsTabs,
   AnalysisOverview,
 } from '@vben/common-ui';
-import {
-  SvgBellIcon,
-  SvgCakeIcon,
-  SvgCardIcon,
-  SvgDownloadIcon,
-} from '@vben/icons';
+import { SvgBellIcon, SvgCakeIcon, SvgCardIcon } from '@vben/icons';
+
+import { getCDNData, getCDNTopData } from '#/api/core/administration';
 
 import AnalyticsTrends from './analytics-trends.vue';
-import AnalyticsVisitsData from './analytics-visits-data.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
 
-const overviewItems: AnalysisOverviewItem[] = [
-  {
-    icon: SvgCardIcon,
-    title: '用户量',
-    totalTitle: '总用户量',
-    totalValue: 120_000,
-    value: 2000,
-  },
-  {
-    icon: SvgCakeIcon,
-    title: '访问量',
-    totalTitle: '总访问量',
-    totalValue: 500_000,
-    value: 20_000,
-  },
-  {
-    icon: SvgDownloadIcon,
-    title: '下载量',
-    totalTitle: '总下载量',
-    totalValue: 120_000,
-    value: 8000,
-  },
-  {
-    icon: SvgBellIcon,
-    title: '使用量',
-    totalTitle: '总使用量',
-    totalValue: 50_000,
-    value: 5000,
-  },
-];
+const dayDataModel = ref<{ time: string; value: number }>([]);
+const monthDataModel = ref<{ time: string; value: number }>([]);
+const deviceDataModel = ref<{ time: string; value: number }>([]);
+const browserDataModel = ref<{ time: string; value: number }>([]);
+const overviewItems = ref<AnalysisOverviewItem[]>();
+overviewItems.value = [];
+
+onMounted(async () => {
+  const dayData = await getCDNData({
+    mode: 'day',
+    metric: 'request',
+    domainName: 'www.guguhao.com',
+    interval: 'hour',
+  });
+
+  dayDataModel.value = dayData.detailData;
+
+  const weekData = await getCDNData({
+    mode: 'week',
+    metric: 'request',
+    domainName: 'www.guguhao.com',
+    interval: 'day',
+  });
+
+  const monthData = await getCDNData({
+    mode: 'month',
+    metric: 'request',
+    domainName: 'www.guguhao.com',
+    interval: 'day',
+  });
+
+  monthDataModel.value = monthData.detailData;
+
+  const deviceData = await getCDNTopData({
+    mode: 'month',
+    metric: 'ua_device',
+    domainName: 'www.guguhao.com',
+    filter: 'request',
+  });
+
+  deviceDataModel.value = deviceData.detailData;
+
+  const browserData = await getCDNTopData({
+    mode: 'month',
+    metric: 'ua_browser',
+    domainName: 'www.guguhao.com',
+    filter: 'request',
+  });
+
+  browserDataModel.value = browserData.detailData;
+
+  overviewItems.value = [
+    {
+      icon: markRaw(SvgCardIcon),
+      title: '小时访问量',
+      totalTitle: '24小时总访问量',
+      totalValue: dayData.summarizedData.value,
+      value: dayData.detailData[0].value,
+    },
+    {
+      icon: markRaw(SvgCakeIcon),
+      title: '金日访问量',
+      totalTitle: '周总访问量',
+      totalValue: weekData.summarizedData.value,
+      value: weekData.detailData[weekData.detailData.length - 1].value,
+    },
+    {
+      icon: markRaw(SvgBellIcon),
+      title: '周访问量',
+      totalTitle: '月总访问量',
+      totalValue: monthData.summarizedData.value,
+      value: monthData.detailData
+        .slice(-7)
+        .reduce((sum: any, item: { value: any }) => sum + item.value, 0),
+    },
+  ];
+});
 
 const chartTabs: TabOption[] = [
   {
-    label: '流量趋势',
+    label: '日流量趋势',
     value: 'trends',
   },
   {
@@ -68,22 +113,22 @@ const chartTabs: TabOption[] = [
     <AnalysisOverview :items="overviewItems" />
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
       <template #trends>
-        <AnalyticsTrends />
+        <AnalyticsTrends :data="dayDataModel" />
       </template>
       <template #visits>
-        <AnalyticsVisits />
+        <AnalyticsVisits :data="monthDataModel" />
       </template>
     </AnalysisChartsTabs>
 
     <div class="mt-5 w-full md:flex">
-      <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问数量">
-        <AnalyticsVisitsData />
+      <AnalysisChartCard
+        class="mt-5 md:mr-4 md:mt-0 md:w-1/2"
+        title="月访问设备"
+      >
+        <AnalyticsVisitsSource :data="deviceDataModel" />
       </AnalysisChartCard>
-      <AnalysisChartCard class="mt-5 md:mr-4 md:mt-0 md:w-1/3" title="访问来源">
-        <AnalyticsVisitsSource />
-      </AnalysisChartCard>
-      <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/3" title="访问来源">
-        <AnalyticsVisitsSales />
+      <AnalysisChartCard class="mt-5 md:mt-0 md:w-1/2" title="月访问浏览器">
+        <AnalyticsVisitsSales :data="browserDataModel" />
       </AnalysisChartCard>
     </div>
   </div>
