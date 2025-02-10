@@ -57,13 +57,23 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        name: 'AIJJX3',
-        path: '/aijx3',
+        name: 'JX3search',
+        path: '/jx3search',
         component: IFrameView,
         meta: {
           icon: 'https://www.jx3search.com/favicon.ico',
           link: 'https://www.jx3search.com/',
           title: $t('jx3.JX3Search'),
+        },
+      },
+      {
+        name: 'j3wj',
+        path: '/j3wj',
+        component: IFrameView,
+        meta: {
+          icon: 'https://www.j3wj.com/img/favicon.ico',
+          link: 'https://www.j3wj.com/',
+          title: $t('jx3.j3wj'),
         },
       },
     ],

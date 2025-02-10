@@ -2,9 +2,9 @@
 import type { SortOrder } from '@abp/core';
 import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
 
+import { computed, h, onMounted, ref } from 'vue';
 import type { CharacterDto } from '../../types/characters';
-
-import { h, ref } from 'vue';
+import type { ConfigDto } from '../../types/settings';
 
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
@@ -15,6 +15,7 @@ import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import { postPagedListApi, updateApi } from '../../api/characters';
+import { getConfigApi } from '../../api/settings';
 import { useCharacter } from '../../hooks/useCharacters';
 import { state } from '../../types/characters';
 
@@ -26,6 +27,32 @@ const CheckIcon = createIconifyIcon('ant-design:check-outlined');
 const CloseIcon = createIconifyIcon('ant-design:close-outlined');
 
 const sorting = ref<string | undefined>(undefined);
+
+const searchConfig = ref<ConfigDto>({
+  careers: [],
+  shapes: [],
+  assetCategories: {},
+  tags: [],
+});
+
+const careerOptions = computed(() =>
+  searchConfig.value.careers.map(c => ({ label: c, value: c }))
+);
+
+const shapeOptions = computed(() =>
+  searchConfig.value.shapes.map(c => ({ label: c, value: c }))
+);
+
+const tagOptions = computed(() =>
+  searchConfig.value.tags.map(c => ({ label: c, value: c }))
+);
+
+const assetOptions = computed(() =>
+  Object.entries(searchConfig.value.assetCategories).flatMap(([category, assets]) => ({
+    label: category,
+    options: assets.map(a => ({ label: a.alias, value: a.alias }))
+  })),
+);
 
 const valueTypeOptions = Object.keys(stateDisplayMap).map((key) => {
   const state = stateDisplayMap[Number(key) as state];
@@ -56,16 +83,125 @@ const formOptions: VbenFormProps = {
       formItemClass: 'col-span-1 items-baseline',
       label: $t('JX3.CharacterState'),
     },
+    // Add careers select
     {
       component: 'Select',
       componentProps: {
         allowClear: true,
-        options: [{ label: '成女', value: '成女' }, { label: '成男', value: '成男' }, { label: '萝莉', value: '萝莉' }, { label: '正太', value: '正太' }],
-        placeholder: '请选择',
+        options: careerOptions,
+        placeholder: '请选择职业',
+      },
+      fieldName: 'career',
+      formItemClass: 'col-span-1 items-baseline',
+      label: $t('JX3.CharacterCareer'),
+    },
+    // Add shapes select
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: shapeOptions,
+        placeholder: '请选择体型',
       },
       fieldName: 'shape',
       formItemClass: 'col-span-1 items-baseline',
       label: $t('JX3.CharacterShape'),
+    },
+    // Add asset categories select
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        mode: 'multiple',
+        options: assetOptions,
+        placeholder: '请选择外观',
+        filterable: true,  // Enable local search
+      },
+      fieldName: 'assets',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '外观',
+    },
+    // Add tags select
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        mode: 'multiple',
+        options: tagOptions,
+        placeholder: '请选择亮点',
+      },
+      fieldName: 'tags',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '亮点',
+    },
+        // Add price range select
+        {
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        placeholder: '最小价格',
+      },
+      fieldName: 'minPrice',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '最小价格',
+    },
+    {
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        placeholder: '最大价格',
+      },
+      fieldName: 'maxPrice',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '最大价格',
+    },
+    // Add bookmark number range select
+    {
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        placeholder: '最小收藏',
+      },
+      fieldName: 'minBookmarkNumber',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '最小收藏',
+    },
+    {
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        placeholder: '最大收藏',
+      },
+      fieldName: 'maxBookmarkNumber',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '最大收藏',
+    },
+    // Add achievement points range select
+    {
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        placeholder: '最小成就',
+      },
+      fieldName: 'minAchievementPoint',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '最小成就',
+    },
+    {
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        placeholder: '最大成就',
+      },
+      fieldName: 'maxAchievementPoint',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '最大成就',
     },
   ],
   // 控制表单是否显示折叠按钮
@@ -263,6 +399,11 @@ const [Grid, { query }] = useVbenVxeGrid({
   gridOptions,
 });
 
+onMounted(async () => {
+  searchConfig.value = await getConfigApi(true);
+  console.log(searchConfig.value)
+});
+
 function onSort(params: { field: string; order: SortOrder }) {
   const sort = params.order ? `${params.field} ${params.order}` : undefined;
   sorting.value = sort;
@@ -319,4 +460,5 @@ const handleFetchCharacter = (row: CharacterDto) => {
   </Grid>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
