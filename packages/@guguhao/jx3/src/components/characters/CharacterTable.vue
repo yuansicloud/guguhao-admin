@@ -56,6 +56,17 @@ const formOptions: VbenFormProps = {
       formItemClass: 'col-span-1 items-baseline',
       label: $t('JX3.CharacterState'),
     },
+    {
+      component: 'Select',
+      componentProps: {
+        allowClear: true,
+        options: [{ label: '成女', value: '成女' }, { label: '成男', value: '成男' }, { label: '萝莉', value: '萝莉' }, { label: '正太', value: '正太' }],
+        placeholder: '请选择',
+      },
+      fieldName: 'shape',
+      formItemClass: 'col-span-1 items-baseline',
+      label: $t('JX3.CharacterShape'),
+    },
   ],
   // 控制表单是否显示折叠按钮
   showCollapseButton: true,
@@ -242,7 +253,7 @@ const gridOptions: VxeGridProps<CharacterDto> = {
 };
 
 const gridEvents: VxeGridListeners<CharacterDto> = {
-  cellClick: () => {},
+  cellClick: () => { },
   sortChange: onSort,
 };
 
@@ -299,13 +310,7 @@ const handleFetchCharacter = (row: CharacterDto) => {
     <template #action="{ row }">
       <div class="flex flex-row">
         <div class="basis-1/2">
-          <Button
-            :icon="h(EditOutlined)"
-            block
-            type="link"
-            class="text-warning"
-            @click="handleFetchCharacter(row)"
-          >
+          <Button :icon="h(EditOutlined)" block type="link" class="text-warning" @click="handleFetchCharacter(row)">
             {{ $t('jx3.fetchWBLAppearanceInfo') }}
           </Button>
         </div>

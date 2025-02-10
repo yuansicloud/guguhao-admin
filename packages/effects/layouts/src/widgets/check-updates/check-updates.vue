@@ -15,7 +15,7 @@ interface Props {
 defineOptions({ name: 'CheckUpdates' });
 
 const props = withDefaults(defineProps<Props>(), {
-  checkUpdatesInterval: 1,
+  checkUpdatesInterval: 30,
   checkUpdateUrl: import.meta.env.BASE_URL || '/',
 });
 

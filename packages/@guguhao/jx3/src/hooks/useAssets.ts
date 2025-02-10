@@ -35,7 +35,7 @@ export function useAssets() {
     [AssetType.Pals]: { color: '#ffcc00', value: L('AssetType:Pals') },
     [AssetType.Pet]: { color: '#4caf50', value: L('AssetType:Pet') },
     [AssetType.RightLovePendent]: {
-      color: '#9c27b0',
+      color: '#f44336',
       value: L('AssetType:RightLovePendent'),
     },
     [AssetType.RightShoudler]: {
@@ -49,6 +49,7 @@ export function useAssets() {
     [AssetType.Unknown]: { color: '#87d068', value: L('AssetType:Unknown') },
     [AssetType.Waist]: { color: '#9c27b0', value: L('AssetType:Waist') },
     [AssetType.Weapon]: { color: '#ff5722', value: L('AssetType:Weapon') },
+    [AssetType.HeadPendent]: { color: '#9c27b0', value: L('AssetType:HeadPendent') },
   };
 
   const getAssetTypeColor = computed(() => {

@@ -75,6 +75,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onOpenChange: async (isOpen: boolean) => {
     if (isOpen) {
+      entityId.value = null;
       formModel.value = { ...defaultModel };
       modalApi.setState({
         title: $t('AbpUi.AddNew'),
@@ -109,25 +110,12 @@ function onDateChange(e: any) {
 
 <template>
   <Modal>
-    <Form
-      ref="form"
-      :label-col="{ span: 6 }"
-      :model="formModel"
-      :wrapper-col="{ span: 18 }"
-    >
-      <FormItem
-        :label="$t('JX3.AssetAvatar')"
-        name="avatar"
-        v-if="formModel.avatar"
-      >
+    <Form ref="form" :label-col="{ span: 6 }" :model="formModel" :wrapper-col="{ span: 18 }">
+      <FormItem :label="$t('JX3.AssetAvatar')" name="avatar" v-if="formModel.avatar">
         <Avatar :src="formModel.avatar" :size="60" shape="square" />
       </FormItem>
 
-      <FormItem
-        :label="$t('JX3.AssetMediaResources')"
-        name="mediaResources"
-        v-if="formModel.mediaResources"
-      >
+      <FormItem :label="$t('JX3.AssetMediaResources')" name="mediaResources" v-if="formModel.mediaResources">
         <Avatar :src="formModel.mediaResources" :size="60" shape="square" />
       </FormItem>
 
@@ -140,29 +128,18 @@ function onDateChange(e: any) {
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetAssetType')" name="assetType">
-        <Select
-          v-model:value="formModel.assetType"
-          :options="valueTypeOptions"
-        />
+        <Select v-model:value="formModel.assetType" :options="valueTypeOptions" />
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetSubType')" name="subType">
         <Input v-model:value="formModel.subType" />
       </FormItem>
 
-      <FormItem
-        :label="$t('JX3.AssetIsHighValue')"
-        name="isHighValue"
-        value-prop-name="checked"
-      >
+      <FormItem :label="$t('JX3.AssetIsHighValue')" name="isHighValue" value-prop-name="checked">
         <Checkbox v-model:checked="formModel.isHighValue" />
       </FormItem>
 
-      <FormItem
-        :label="$t('JX3.AssetIsUnique')"
-        name="isUnique"
-        value-prop-name="checked"
-      >
+      <FormItem :label="$t('JX3.AssetIsUnique')" name="isUnique" value-prop-name="checked">
         <Checkbox v-model:checked="formModel.isUnique" />
       </FormItem>
 
@@ -171,30 +148,18 @@ function onDateChange(e: any) {
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetAdjustedPrice')" name="price">
-        <InputNumber
-          v-model:value="formModel.adjustedPrice"
-          style="width: 100%"
-        />
+        <InputNumber v-model:value="formModel.adjustedPrice" style="width: 100%" />
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetCategory')" name="category">
         <Input v-model:value="formModel.category" />
       </FormItem>
 
-      <FormItem
-        :label="$t('JX3.AssetOfficialSaleDate')"
-        name="officialSaleDate"
-      >
-        <DatePicker
-          :placeholder="$t('JX3.AssetOfficialSaleDate')"
-          :value="
-            formModel.officialSaleDate
-              ? dayjs(formModel.officialSaleDate, 'YYYY-MM-DD')
-              : ''
-          "
-          style="width: 100%"
-          @change="onDateChange($event)"
-        />
+      <FormItem :label="$t('JX3.AssetOfficialSaleDate')" name="officialSaleDate">
+        <DatePicker :placeholder="$t('JX3.AssetOfficialSaleDate')" :value="formModel.officialSaleDate
+        ? dayjs(formModel.officialSaleDate, 'YYYY-MM-DD')
+        : ''
+      " style="width: 100%" @change="onDateChange($event)" />
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetGetSource')" name="getSource">
@@ -202,10 +167,7 @@ function onDateChange(e: any) {
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetDescription')" name="description">
-        <Textarea
-          v-model:value="formModel.description"
-          :auto-size="{ minRows: 2 }"
-        />
+        <Textarea v-model:value="formModel.description" :auto-size="{ minRows: 2 }" />
       </FormItem>
 
       <FormItem :label="$t('JX3.AssetWBLName')" name="wblName">

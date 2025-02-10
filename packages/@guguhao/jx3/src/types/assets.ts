@@ -96,6 +96,11 @@ export enum AssetType {
   // / 武器拓印
   // / </summary>
   Weapon = 6,
+
+  // / <summary>
+  // / 头饰
+  // / </summary>
+  HeadPendent = 30,
 }
 
 interface AssetDto {
