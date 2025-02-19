@@ -11,7 +11,7 @@ import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue';
+import { DeleteOutlined, EditOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
@@ -253,7 +253,7 @@ const gridOptions: VxeGridProps<AssetDto> = {
 };
 
 const gridEvents: VxeGridListeners<AssetDto> = {
-  cellClick: () => {},
+  cellClick: () => { },
   sortChange: onSort,
 };
 
@@ -357,34 +357,18 @@ const getCheckedRows = async () => {
     <template #action="{ row }">
       <div class="flex flex-row">
         <div class="basis-1/3">
-          <Button
-            :icon="h(EditOutlined)"
-            block
-            type="link"
-            @click="handleEdit(row)"
-          >
+          <Button :icon="h(EditOutlined)" block type="link" @click="handleEdit(row)">
             {{ $t('AbpUi.Edit') }}
           </Button>
         </div>
         <div class="basis-1/3">
-          <Button
-            :icon="h(EditOutlined)"
-            block
-            type="link"
-            class="text-warning"
-            @click="handleFetchWBLAppearanceInfo(row)"
-          >
+          <Button :icon="h(RedoOutlined)" block type="link" class="text-success"
+            @click="handleFetchWBLAppearanceInfo(row)">
             {{ $t('jx3.fetchWBLAppearanceInfo') }}
           </Button>
         </div>
         <div class="basis-1/3">
-          <Button
-            :icon="h(DeleteOutlined)"
-            block
-            type="link"
-            danger
-            @click="handleDelete(row)"
-          >
+          <Button :icon="h(DeleteOutlined)" block type="link" danger @click="handleDelete(row)">
             {{ $t('AbpUi.Delete') }}
           </Button>
         </div>

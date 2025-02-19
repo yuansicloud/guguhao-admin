@@ -2,6 +2,9 @@
   "AIJX3": "AI JX3",
   "Create": "Create",
   "J3SH": "J3 Shang Hui",
+  "JX3": {
+    "Tags": ""
+  },
   "JX3Search": "JX3 Search",
   "Merge": "Merge",
   "RequireTwo": "select 2 records",
@@ -9,6 +12,7 @@
   "WBL": "Wan Bao Lou",
   "WillRefreshAppearance": "Will Refresh Appearance",
   "WillRefreshCharacter": "Will Refresh Character",
+  "assess": "Assess",
   "assets": "assets",
   "characters": "character",
   "fetchWBLAppearanceInfo": "fetch WBL",

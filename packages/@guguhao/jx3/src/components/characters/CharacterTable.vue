@@ -10,11 +10,12 @@ import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { EditOutlined } from '@ant-design/icons-vue';
+import { BookOutlined, AccountBookOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { postPagedListApi, updateApi } from '../../api/characters';
+import { postPagedListApi, updateApi, assessCharacterApi } from '../../api/characters';
+import { convertToTemplateApi } from '../../api/character-templates';
 import { getConfigApi } from '../../api/settings';
 import { useCharacter } from '../../hooks/useCharacters';
 import { state } from '../../types/characters';
@@ -134,8 +135,8 @@ const formOptions: VbenFormProps = {
       formItemClass: 'col-span-1 items-baseline',
       label: '亮点',
     },
-        // Add price range select
-        {
+    // Add price range select
+    {
       component: 'InputNumber',
       componentProps: {
         allowClear: true,
@@ -358,7 +359,7 @@ const gridOptions: VxeGridProps<CharacterDto> = {
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('AbpUi.Actions'),
-      width: 180,
+      width: 300,
     },
   ],
   exportConfig: {},
@@ -422,6 +423,31 @@ const handleFetchCharacter = (row: CharacterDto) => {
     title: $t('AbpUi.AreYouSure'),
   });
 };
+const handleAssessCharacter = (row: CharacterDto) => {
+  Modal.confirm({
+    centered: true,
+    content: $t('jx3.WillAssessCharacter'),
+    onOk: async () => {
+      await assessCharacterApi(row.id);
+      message.success($t('jx3.Success'));
+      query();
+    },
+    title: $t('AbpUi.AreYouSure'),
+  });
+};
+
+const handleConvertCharacterToTemplate = (row: CharacterDto) => {
+  Modal.confirm({
+    centered: true,
+    content: $t('jx3.WillConvertCharacterToTemplate'),
+    onOk: async () => {
+      await convertToTemplateApi(row.id);
+      message.success($t('jx3.Success'));
+      query();
+    },
+    title: $t('AbpUi.AreYouSure'),
+  });
+};
 </script>
 
 <template>
@@ -450,9 +476,21 @@ const handleFetchCharacter = (row: CharacterDto) => {
     </template>
     <template #action="{ row }">
       <div class="flex flex-row">
-        <div class="basis-1/2">
-          <Button :icon="h(EditOutlined)" block type="link" class="text-warning" @click="handleFetchCharacter(row)">
+        <div class="basis-1/3">
+          <Button :icon="h(RedoOutlined)" block type="link" class="text-success" @click="handleFetchCharacter(row)">
             {{ $t('jx3.fetchWBLAppearanceInfo') }}
+          </Button>
+        </div>
+        <div class="basis-1/3">
+          <Button :icon="h(AccountBookOutlined)" block type="link" class="text-primary"
+            @click="handleAssessCharacter(row)">
+            {{ $t('jx3.assess') }}
+          </Button>
+        </div>
+        <div class="basis-1/3">
+          <Button :icon="h(BookOutlined)" block type="link" class="text-warning"
+            @click="handleConvertCharacterToTemplate(row)">
+            {{ $t('jx3.convertToTemplate') }}
           </Button>
         </div>
       </div>
@@ -460,5 +498,4 @@ const handleFetchCharacter = (row: CharacterDto) => {
   </Grid>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -29,6 +29,22 @@ const routes: RouteRecordRaw[] = [
         path: '/characters',
         component: () => import('#/views/jx3/characters/index.vue'),
       },
+      {
+        meta: {
+          title: $t('jx3.character-templates'),
+        },
+        name: 'JX3CharacterTemplates',
+        path: '/character-templates',
+        component: () => import('#/views/jx3/character-templates/index.vue'),
+      },
+      {
+        meta: {
+          title: $t('jx3.assessments'),
+        },
+        name: 'JX3Assessments',
+        path: '/assessments',
+        component: () => import('#/views/jx3/assessments/index.vue'),
+      },
     ],
   },
 ];

@@ -34,3 +34,12 @@ export function updateApi(code: string): Promise<CharacterDto> {
     `/api/jx3/character/character-status?code=${code}`,
   );
 }
+
+/**
+ * 估价角色
+ * @param input 参数
+ * @returns 评估ID
+ */
+export function assessCharacterApi(id: string): Promise<string> {
+  return requestClient.post(`/api/jx3/character/${id}/assess-character`);
+}
