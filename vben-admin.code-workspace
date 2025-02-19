@@ -53,46 +53,6 @@
       "path": "internal/vite-config",
     },
     {
-      "name": "@abp/account",
-      "path": "packages/@abp/account",
-    },
-    {
-      "name": "@abp/auditing",
-      "path": "packages/@abp/auditing",
-    },
-    {
-      "name": "@abp/core",
-      "path": "packages/@abp/core",
-    },
-    {
-      "name": "@abp/identity",
-      "path": "packages/@abp/identity",
-    },
-    {
-      "name": "@abp/notifications",
-      "path": "packages/@abp/notifications",
-    },
-    {
-      "name": "@abp/openiddict",
-      "path": "packages/@abp/openiddict",
-    },
-    {
-      "name": "@abp/permissions",
-      "path": "packages/@abp/permissions",
-    },
-    {
-      "name": "@abp/request",
-      "path": "packages/@abp/request",
-    },
-    {
-      "name": "@abp/settings",
-      "path": "packages/@abp/settings",
-    },
-    {
-      "name": "@abp/ui",
-      "path": "packages/@abp/ui",
-    },
-    {
       "name": "@vben-core/design",
       "path": "packages/@core/base/design",
     },
@@ -139,10 +99,6 @@
     {
       "name": "@vben-core/tabs-ui",
       "path": "packages/@core/ui-kit/tabs-ui",
-    },
-    {
-      "name": "@guguhao/jx3",
-      "path": "packages/@guguhao/jx3",
     },
     {
       "name": "@vben/constants",
