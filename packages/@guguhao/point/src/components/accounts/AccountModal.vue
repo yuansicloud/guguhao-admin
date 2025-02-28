@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { FormInstance } from 'ant-design-vue';
 import type { TransferItem } from 'ant-design-vue/es/transfer';
-import type { DataNode, EventDataNode } from 'ant-design-vue/es/tree';
+import type { DataNode } from 'ant-design-vue/es/tree';
 
-import type { IdentityUserDto } from '../../types/users';
+import type { IdentityUserDto } from '@abp/identity';
 
 import { defineEmits, defineOptions, ref, toValue } from 'vue';
 
@@ -23,11 +23,10 @@ Transfer,
 Tree,
 } from 'ant-design-vue';
 
-import { useOrganizationUnitsApi } from '../../api/useOrganizationUnitsApi';
-import { useUsersApi } from '../../api/useUsersApi';
+import { useUsersApi } from '@abp/identity';
 
 defineOptions({
-  name: 'UserModal',
+  name: 'AccountModal',
 });
 const emits = defineEmits<{
   (event: 'change', data: IdentityUserDto): void;
@@ -64,7 +63,6 @@ const {
   getRolesApi,
   updateApi,
 } = useUsersApi();
-const { getChildrenApi, getRootListApi } = useOrganizationUnitsApi();
 const [Modal, modalApi] = useVbenModal({
   draggable: true,
   fullscreenButton: false,
@@ -169,42 +167,6 @@ async function initAssignableRoles() {
   });
 }
 
-/**
- * 初始化组织机构树
- * @param userId 用户id
- */
-async function initOrganizationUnitTree(userId: string) {
-  const [ouResult, userOuResult] = await Promise.all([
-    getRootListApi(),
-    getOrganizationUnitsApi(userId),
-  ]);
-  organizationUnits.value = ouResult.items.map((item) => {
-    return {
-      isLeaf: false,
-      key: item.id,
-      title: item.displayName,
-      children: [],
-    };
-  });
-  checkedOuKeys.value = userOuResult.items.map((item) => item.id);
-}
-
-/** 加载组织机构树节点 */
-async function onLoadOuChildren(node: EventDataNode) {
-  const nodeKey = String(node.key);
-  const { items } = await getChildrenApi({ id: nodeKey });
-  node.dataRef!.isLeaf = items.length === 0;
-  node.dataRef!.children = items.map((item): DataNode => {
-    return {
-      isLeaf: false,
-      key: item.id,
-      title: item.displayName,
-      children: [],
-    };
-  });
-  organizationUnits.value = [...organizationUnits.value];
-  loadedOuKeys.value.push(nodeKey);
-}
 </script>
 
 <template>

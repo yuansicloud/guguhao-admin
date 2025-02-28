@@ -16,9 +16,9 @@ import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import {
-  deleteApi,
-  fetchWBLAppearanceInfoApi,
-  getPagedListApi,
+deleteApi,
+fetchWBLAppearanceInfoApi,
+getPagedListApi,
 } from '../../api/assets';
 import { useAssets } from '../../hooks/useAssets';
 import { AssetType } from '../../types/assets';

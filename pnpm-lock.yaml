@@ -689,6 +689,9 @@ importers:
       '@guguhao/jx3':
         specifier: workspace:*
         version: link:../../packages/@guguhao/jx3
+      '@guguhao/point':
+        specifier: workspace:*
+        version: link:../../packages/@guguhao/point
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
@@ -1933,6 +1936,54 @@ importers:
       '@abp/core':
         specifier: workspace:*
         version: link:../../@abp/core
+      '@abp/request':
+        specifier: workspace:*
+        version: link:../../@abp/request
+      '@abp/ui':
+        specifier: workspace:*
+        version: link:../../@abp/ui
+      '@ant-design/icons-vue':
+        specifier: 'catalog:'
+        version: 7.0.1(vue@3.5.13(typescript@5.7.3))
+      '@vben/access':
+        specifier: workspace:*
+        version: link:../../effects/access
+      '@vben/common-ui':
+        specifier: workspace:*
+        version: link:../../effects/common-ui
+      '@vben/hooks':
+        specifier: workspace:*
+        version: link:../../effects/hooks
+      '@vben/icons':
+        specifier: workspace:*
+        version: link:../../icons
+      '@vben/layouts':
+        specifier: workspace:*
+        version: link:../../effects/layouts
+      '@vben/locales':
+        specifier: workspace:*
+        version: link:../../locales
+      ant-design-vue:
+        specifier: 'catalog:'
+        version: 4.2.6(vue@3.5.13(typescript@5.7.3))
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.13
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.7.3)
+      vxe-table:
+        specifier: 'catalog:'
+        version: 4.10.0(vue@3.5.13(typescript@5.7.3))
+
+  packages/@guguhao/point:
+    dependencies:
+      '@abp/core':
+        specifier: workspace:*
+        version: link:../../@abp/core
+      '@abp/identity':
+        specifier: workspace:*
+        version: link:../../@abp/identity
       '@abp/request':
         specifier: workspace:*
         version: link:../../@abp/request
@@ -5332,11 +5383,6 @@ packages:
 
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
-
-  '@vxe-ui/core@4.0.29':
-    resolution: {integrity: sha512-F6ZJ7+x48qBDx7ME/GdmRN5OECha9wnNy0IIA8AAWHrjhTFY5yBBE+t2ULO6wgwkFB2E74CtYF/2/nprpGrdlA==}
-    peerDependencies:
-      vue: ^3.5.13
 
   '@vxe-ui/core@4.0.33':
     resolution: {integrity: sha512-TZS4CuIQ60Q5hmaglKP2+BC5/4Gc9exnRt5rMhDx9hY2f7DUMOpnfeVV70cevN0Ik+2T8hw38SP7sfNGUCmwgA==}
@@ -10815,9 +10861,6 @@ packages:
     peerDependencies:
       vue: ^3.5.13
 
-  vxe-pc-ui@4.3.79:
-    resolution: {integrity: sha512-siPLpy1LNIR/J03MuncIjVxZxR5nts8attmEh72Y71L6Cmzn6phTdN749hYV2UNaCPH0GrfHWgHStwRv8iIiXA==}
-
   vxe-pc-ui@4.3.90:
     resolution: {integrity: sha512-Nu6d4c/h9dRhLfJzZ6UhEdKx7UB2qjAl8kBu5nw+aBM9qGMxGJew6ZIpASFofBW5FieU9rgOtFylk9bdGrPTfw==}
 
@@ -14473,12 +14516,6 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
-
-  '@vxe-ui/core@4.0.29(vue@3.5.13(typescript@5.7.3))':
-    dependencies:
-      dom-zindex: 1.0.6
-      vue: 3.5.13(typescript@5.7.3)
-      xe-utils: 3.7.0
 
   '@vxe-ui/core@4.0.33(vue@3.5.13(typescript@5.7.3))':
     dependencies:
@@ -20803,12 +20840,6 @@ snapshots:
       vooks: 0.2.12(vue@3.5.13(typescript@5.7.3))
       vue: 3.5.13(typescript@5.7.3)
 
-  vxe-pc-ui@4.3.79(vue@3.5.13(typescript@5.7.3)):
-    dependencies:
-      '@vxe-ui/core': 4.0.29(vue@3.5.13(typescript@5.7.3))
-    transitivePeerDependencies:
-      - vue
-
   vxe-pc-ui@4.3.90(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       '@vxe-ui/core': 4.0.33(vue@3.5.13(typescript@5.7.3))
@@ -20817,7 +20848,7 @@ snapshots:
 
   vxe-table@4.10.0(vue@3.5.13(typescript@5.7.3)):
     dependencies:
-      vxe-pc-ui: 4.3.79(vue@3.5.13(typescript@5.7.3))
+      vxe-pc-ui: 4.3.90(vue@3.5.13(typescript@5.7.3))
     transitivePeerDependencies:
       - vue
 
