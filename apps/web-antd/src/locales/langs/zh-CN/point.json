@@ -1,7 +1,15 @@
 {
   "ShowAccount": "查看账户",
   "account": "账户",
+  "adjustBalance": "调整咕币",
   "balance": "咕币余额",
+  "balanceChangeFailed": "调整失败",
+  "balanceChangedSuccessfully": "调整成功",
+  "changeAmount": "调整金额",
+  "changeBalance": "调整",
+  "common": {
+    "description": "流水描述"
+  },
   "lastModificationTime": "上次变动",
   "lockedBalance": "冻结咕币",
   "membershipName": "会员等级",

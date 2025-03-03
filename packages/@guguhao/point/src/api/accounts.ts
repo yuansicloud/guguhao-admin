@@ -1,6 +1,10 @@
 import type { PagedResultDto } from '@abp/core';
 
-import type { AccountDto, AccountGetListInput } from '../types/accounts';
+import type {
+  AccountDto,
+  AccountGetListInput,
+  ChangeAccountBalanceInput,
+} from '../types/accounts';
 
 import { requestClient } from '@abp/request';
 /**
@@ -10,9 +14,9 @@ import { requestClient } from '@abp/request';
 export function getPagedListApi(
   data: AccountGetListInput,
 ): Promise<PagedResultDto<AccountDto>> {
-  return requestClient.post<PagedResultDto<AccountDto>>(
+  return requestClient.get<PagedResultDto<AccountDto>>(
     '/api/point-service/account',
-    data,
+    { params: data },
   );
 }
 
@@ -31,5 +35,22 @@ export function getApi(id: string): Promise<AccountDto> {
 export function getByUserIdApi(id: string): Promise<AccountDto> {
   return requestClient.get<AccountDto>(
     `/api/point-service/account/user-account/${id}`,
+  );
+}
+
+/**
+ * Changes the balance of an account.
+ *
+ * @param id - The unique identifier of the account.
+ * @param data - The input data containing the new balance information.
+ * @returns A promise that resolves to the updated account details.
+ */
+export function changeBalanceApi(
+  id: string,
+  data: ChangeAccountBalanceInput,
+): Promise<AccountDto> {
+  return requestClient.post<AccountDto>(
+    `/api/point-service/account/${id}/change-balance`,
+    data,
   );
 }

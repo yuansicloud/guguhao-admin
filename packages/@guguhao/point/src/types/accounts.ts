@@ -12,7 +12,11 @@ interface AccountDto {
   membershipName?: string;
 }
 
-interface AccountGetListInput extends PagedAndSortedResultRequestDto {
+interface AccountGetListInput extends PagedAndSortedResultRequestDto {}
+
+interface ChangeAccountBalanceInput {
+  description: string;
+  changedBalance: number;
 }
 
-export type { AccountDto, AccountGetListInput };
+export type { AccountDto, AccountGetListInput, ChangeAccountBalanceInput };

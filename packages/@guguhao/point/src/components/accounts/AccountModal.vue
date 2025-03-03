@@ -2,7 +2,7 @@
 import type { IdentityUserDto } from '@abp/identity';
 import type { FormInstance } from 'ant-design-vue';
 
-import type { AccountDto } from '../../types/accounts';
+import type { AccountDto, ChangeAccountBalanceInput } from '../../types/accounts';
 import type { TransactionDto } from '../../types/transactions';
 
 import { defineOptions, ref } from 'vue';
@@ -12,9 +12,9 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { formatToDateTime } from '@abp/core';
-import { Form, Input, List, Tabs } from 'ant-design-vue';
+import { Form, Input, List, Tabs, InputNumber, Button, message } from 'ant-design-vue';
 
-import { getByUserIdApi } from '../../api/accounts';
+import { getByUserIdApi, changeBalanceApi } from '../../api/accounts';
 import { getPagedListApi } from '../../api/transactions';
 
 defineOptions({
@@ -32,6 +32,11 @@ const form = ref<FormInstance>();
 /** 表单数据 */
 const formModel = ref<AccountDto>({ ...defaultModel });
 
+const changeBalanceForm = ref<ChangeAccountBalanceInput>({
+  changedBalance: 0,
+  description: "系统调整"
+});
+
 const { hasAccessByCodes } = useAccess();
 
 const [Modal, modalApi] = useVbenModal({
@@ -40,7 +45,7 @@ const [Modal, modalApi] = useVbenModal({
   onCancel() {
     modalApi.close();
   },
-  onClosed() {},
+  onClosed() { },
   onConfirm: async () => {
     modalApi.close();
   },
@@ -55,9 +60,8 @@ const [Modal, modalApi] = useVbenModal({
       });
       try {
         if (userDto?.id) {
-          const account = await getByUserIdApi(userDto.id);
+          formModel.value  = await getByUserIdApi(userDto.id);
           await initTransactions(userDto.id);
-          formModel.value = account;
         }
       } finally {
         modalApi.setState({
@@ -79,16 +83,34 @@ const initTransactions = async (userId: string) => {
   const res = await getPagedListApi({ accountUserId: userId });
   transactionList.value = res.items;
 };
+
+const handleChangeBalance = async () => {
+  try {
+    const userDto = modalApi.getData<IdentityUserDto>();
+    if (formModel.value.id) {
+      await changeBalanceApi(formModel.value.id, changeBalanceForm.value);
+      message.success($t('point.balanceChangedSuccessfully'));
+      // Refresh account data
+      const account = await getByUserIdApi(userDto.id);
+      formModel.value = account;
+      // Refresh transactions
+      await initTransactions(userDto.id);
+      // Reset form
+      changeBalanceForm.value = {
+        changedBalance: 0,
+        description: "系统调整"
+      };
+    }
+  } catch (e) {
+    console.error('Balance change failed:', e);
+    message.error($t('point.balanceChangeFailed'));
+  }
+};
 </script>
 
 <template>
   <Modal>
-    <Form
-      ref="form"
-      :label-col="{ span: 6 }"
-      :model="formModel"
-      :wrapper-col="{ span: 18 }"
-    >
+    <Form ref="form" :label-col="{ span: 6 }" :model="formModel" :wrapper-col="{ span: 18 }">
       <Tabs v-model:active-key="activedTab">
         <!-- 基本信息 -->
         <TabPane key="info" :tab="$t('AbpIdentity.UserInformations')">
@@ -104,24 +126,14 @@ const initTransactions = async (userId: string) => {
           <FormItem :label="$t('point.membershipName')" name="membershipName">
             <Input v-model:value="formModel.membershipName" disabled />
           </FormItem>
-          <FormItem
-            v-if="formModel.lastModificationTime"
-            :label="$t('point.lastModificationTime')"
-            name="lastModificationTime"
-          >
-            <Input
-              :value="formatToDateTime(formModel.lastModificationTime)"
-              disabled
-            />
+          <FormItem v-if="formModel.lastModificationTime" :label="$t('point.lastModificationTime')"
+            name="lastModificationTime">
+            <Input :value="formatToDateTime(formModel.lastModificationTime)" disabled />
           </FormItem>
         </TabPane>
         <!-- 角色 -->
 
-        <TabPane
-          v-if="checkManageRolePolicy()"
-          key="role"
-          :tab="$t('point.recentTransaction')"
-        >
+        <TabPane v-if="checkManageRolePolicy()" key="role" :tab="$t('point.recentTransaction')">
           <List item-layout="horizontal" :data-source="transactionList">
             <template #renderItem="{ item }">
               <ListItem>
@@ -142,6 +154,25 @@ const initTransactions = async (userId: string) => {
               </ListItem>
             </template>
           </List>
+        </TabPane>
+
+        <TabPane v-if="checkManageRolePolicy()" key="changeBalance" :tab="$t('point.adjustBalance')">
+          <Form :model="changeBalanceForm" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+            <FormItem :label="$t('point.changeAmount')" name="changedBalance" :rules="[{ required: true }]">
+              <InputNumber v-model:value="changeBalanceForm.changedBalance" style="width: 100%" :min="-100000"
+                :max="100000" />
+            </FormItem>
+
+            <FormItem :label="$t('point.common.description')" name="description" :rules="[{ required: true }]">
+              <Input v-model:value="changeBalanceForm.description" :placeholder="$t('point.common.description')" />
+            </FormItem>
+
+            <div class="w-full flex items-center justify-center">
+              <Button type="primary" @click="handleChangeBalance">
+                {{ $t('point.changeBalance') }}
+              </Button></div>
+
+          </Form>
         </TabPane>
       </Tabs>
     </Form>
