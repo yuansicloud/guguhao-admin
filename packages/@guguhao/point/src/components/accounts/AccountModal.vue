@@ -1,119 +1,64 @@
 <script setup lang="ts">
-import type { FormInstance } from 'ant-design-vue';
-import type { TransferItem } from 'ant-design-vue/es/transfer';
-import type { DataNode } from 'ant-design-vue/es/tree';
-
 import type { IdentityUserDto } from '@abp/identity';
+import type { FormInstance } from 'ant-design-vue';
 
-import { defineEmits, defineOptions, ref, toValue } from 'vue';
+import type { AccountDto } from '../../types/accounts';
+import type { TransactionDto } from '../../types/transactions';
+
+import { defineOptions, ref } from 'vue';
 
 import { useAccess } from '@vben/access';
 import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import { useSettings } from '@abp/core';
-import {
-Checkbox,
-Form,
-Input,
-InputPassword,
-message,
-Tabs,
-Transfer,
-Tree,
-} from 'ant-design-vue';
+import { formatToDateTime } from '@abp/core';
+import { Form, Input, List, Tabs } from 'ant-design-vue';
 
-import { useUsersApi } from '@abp/identity';
+import { getByUserIdApi } from '../../api/accounts';
+import { getPagedListApi } from '../../api/transactions';
 
 defineOptions({
   name: 'AccountModal',
 });
-const emits = defineEmits<{
-  (event: 'change', data: IdentityUserDto): void;
-}>();
 
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
+const ListItem = List.Item;
+const defaultModel = {} as AccountDto;
 
-const defaultModel = {
-  isActive: true,
-} as IdentityUserDto;
-
+const transactionList = ref<Array<TransactionDto>>([]);
 const activedTab = ref('info');
 const form = ref<FormInstance>();
-/** 可分配的角色列表 */
-const assignedRoles = ref<TransferItem[]>([]);
-/** 组织机构 */
-const organizationUnits = ref<DataNode[]>([]);
-/** 已加载的组织机构Keys */
-const loadedOuKeys = ref<string[]>([]);
-/** 用户拥有的组织机构节点keys */
-const checkedOuKeys = ref<string[]>([]);
 /** 表单数据 */
-const formModel = ref<IdentityUserDto>({ ...defaultModel });
+const formModel = ref<AccountDto>({ ...defaultModel });
 
-const { isTrue } = useSettings();
 const { hasAccessByCodes } = useAccess();
-const {
-  cancel,
-  createApi,
-  getApi,
-  getAssignableRolesApi,
-  getOrganizationUnitsApi,
-  getRolesApi,
-  updateApi,
-} = useUsersApi();
+
 const [Modal, modalApi] = useVbenModal({
   draggable: true,
   fullscreenButton: false,
   onCancel() {
     modalApi.close();
   },
-  onClosed() {
-    cancel('User modal has closed!');
-  },
+  onClosed() {},
   onConfirm: async () => {
-    await form.value?.validate();
-    const api = formModel.value.id
-      ? updateApi(formModel.value.id, toValue(formModel))
-      : createApi(toValue(formModel));
-    modalApi.setState({ confirmLoading: true });
-    api
-      .then((res) => {
-        message.success($t('AbpUi.SavedSuccessfully'));
-        emits('change', res);
-        modalApi.close();
-      })
-      .finally(() => {
-        modalApi.setState({ confirmLoading: false });
-      });
+    modalApi.close();
   },
   onOpenChange: async (isOpen: boolean) => {
     if (isOpen) {
-      loadedOuKeys.value = [];
-      assignedRoles.value = [];
       activedTab.value = 'info';
-      organizationUnits.value = [];
       formModel.value = { ...defaultModel };
+      const userDto = modalApi.getData<IdentityUserDto>();
       modalApi.setState({
         loading: true,
-        title: $t('AbpIdentity.NewUser'),
+        title: `${userDto.name} - ${userDto.phoneNumber}`,
       });
       try {
-        const userDto = modalApi.getData<IdentityUserDto>();
-        const manageRolePolicy = checkManageRolePolicy();
         if (userDto?.id) {
-          await initUserInfo(userDto.id);
-
-          manageRolePolicy && await initUserRoles(userDto.id);
-          manageRolePolicy && await initAssignableRoles();
-
-          modalApi.setState({
-            title: `${$t('AbpIdentity.Users')} - ${userDto.userName}`,
-          });
-          return;
+          const account = await getByUserIdApi(userDto.id);
+          await initTransactions(userDto.id);
+          formModel.value = account;
         }
-        manageRolePolicy && (await initAssignableRoles());
       } finally {
         modalApi.setState({
           loading: false,
@@ -121,6 +66,7 @@ const [Modal, modalApi] = useVbenModal({
       }
     }
   },
+  showConfirmButton: false,
   title: $t('AbpIdentity.Users'),
 });
 
@@ -129,98 +75,77 @@ function checkManageRolePolicy() {
   return hasAccessByCodes(['AbpIdentity.Users.Update.ManageRoles']);
 }
 
-/** 检查管理组织机构权限 */
-function checkManageOuPolicy() {
-  return hasAccessByCodes(['AbpIdentity.Users.ManageOrganizationUnits']);
-}
-
-/**
- * 初始化用户信息
- * @param userId 用户id
- */
-async function initUserInfo(userId: string) {
-  const dto = await getApi(userId);
-  formModel.value = dto;
-  modalApi.setState({
-    title: `${$t('AbpIdentity.Users')} - ${dto.userName}`,
-  });
-}
-
-/**
- * 初始化用户角色
- * @param userId 用户id
- */
-async function initUserRoles(userId: string) {
-  const { items } = await getRolesApi(userId);
-  formModel.value.roleNames = items.map((item) => item.name);
-}
-
-/** 初始化可用角色列表 */
-async function initAssignableRoles() {
-  const { items } = await getAssignableRolesApi();
-  assignedRoles.value = items.map((item) => {
-    return {
-      key: item.name,
-      title: item.name,
-      ...item,
-    };
-  });
-}
-
+const initTransactions = async (userId: string) => {
+  const res = await getPagedListApi({ accountUserId: userId });
+  transactionList.value = res.items;
+};
 </script>
 
 <template>
   <Modal>
-    <Form ref="form" :label-col="{ span: 6 }" :model="formModel" :wrapper-col="{ span: 18 }">
+    <Form
+      ref="form"
+      :label-col="{ span: 6 }"
+      :model="formModel"
+      :wrapper-col="{ span: 18 }"
+    >
       <Tabs v-model:active-key="activedTab">
         <!-- 基本信息 -->
         <TabPane key="info" :tab="$t('AbpIdentity.UserInformations')">
-          <FormItem :label="$t('AbpIdentity.DisplayName:IsActive')">
-            <Checkbox v-model:checked="formModel.isActive">
-              {{ $t('AbpIdentity.DisplayName:IsActive') }}
-            </Checkbox>
+          <FormItem :label="$t('point.balance')" name="balance">
+            <Input v-model:value="formModel.balance" disabled />
           </FormItem>
-          <FormItem :label="$t('AbpIdentity.UserName')" name="userName" required>
-            <Input v-model:value="formModel.userName" :disabled="!isTrue('Abp.Identity.User.IsUserNameUpdateEnabled')" />
+          <FormItem :label="$t('point.lockedBalance')" name="lockedBalance">
+            <Input v-model:value="formModel.lockedBalance" disabled />
           </FormItem>
-          <FormItem v-if="!formModel.id" :label="$t('AbpIdentity.Password')" name="password" required>
-            <InputPassword v-model:value="formModel.password" />
+          <FormItem :label="$t('point.totalUsed')" name="totalUsed">
+            <Input v-model:value="formModel.totalUsed" disabled />
           </FormItem>
-          <FormItem :label="$t('AbpIdentity.DisplayName:Surname')" name="surname">
-            <Input v-model:value="formModel.surname" />
+          <FormItem :label="$t('point.membershipName')" name="membershipName">
+            <Input v-model:value="formModel.membershipName" disabled />
           </FormItem>
-          <FormItem :label="$t('AbpIdentity.DisplayName:Name')" name="name">
-            <Input v-model:value="formModel.name" />
-          </FormItem>
-          <FormItem :label="$t('AbpIdentity.DisplayName:Email')" name="email" required>
-            <Input v-model:value="formModel.email" :disabled="!isTrue('Abp.Identity.User.IsEmailUpdateEnabled')" />
-          </FormItem>
-          <FormItem :label="$t('AbpIdentity.DisplayName:PhoneNumber')" name="phoneNumber">
-            <Input v-model:value="formModel.phoneNumber" />
-          </FormItem>
-          <FormItem :label="$t('AbpIdentity.DisplayName:LockoutEnabled')" :label-col="{ span: 10 }">
-            <Checkbox v-model:checked="formModel.lockoutEnabled">
-              {{ $t('AbpIdentity.DisplayName:LockoutEnabled') }}
-            </Checkbox>
+          <FormItem
+            v-if="formModel.lastModificationTime"
+            :label="$t('point.lastModificationTime')"
+            name="lastModificationTime"
+          >
+            <Input
+              :value="formatToDateTime(formModel.lastModificationTime)"
+              disabled
+            />
           </FormItem>
         </TabPane>
         <!-- 角色 -->
-        <TabPane v-if="checkManageRolePolicy()" key="role" :tab="$t('AbpIdentity.Roles')">
-          <Transfer v-model:target-keys="formModel.roleNames" :data-source="assignedRoles" :list-style="{
-            width: '47%',
-            height: '338px',
-          }" :render="(item) => item.title" :titles="[$t('abp.Available'), $t('abp.Assigned')]"
-            class="tree-transfer" />
-        </TabPane>
-        <!-- 组织机构 -->
-        <TabPane v-if="formModel.id && checkManageOuPolicy()" key="ou" :tab="$t('AbpIdentity.OrganizationUnits')">
-          <Tree :checked-keys="checkedOuKeys" :load-data="onLoadOuChildren" :loaded-keys="loadedOuKeys"
-            :tree-data="organizationUnits" block-node check-strictly checkable disabled />
+
+        <TabPane
+          v-if="checkManageRolePolicy()"
+          key="role"
+          :tab="$t('point.recentTransaction')"
+        >
+          <List item-layout="horizontal" :data-source="transactionList">
+            <template #renderItem="{ item }">
+              <ListItem>
+                <div class="flex w-full items-center justify-between">
+                  <div class="flex w-1/2 justify-between">
+                    <div v-if="item.changedBalance > 0" style="color: red">
+                      +{{ item.changedBalance }}
+                    </div>
+                    <div v-else style="color: green">
+                      {{ item.changedBalance }}
+                    </div>
+                    <div>
+                      {{ item.description }}
+                    </div>
+                  </div>
+                  <div>{{ formatToDateTime(item.creationTime) }}</div>
+                </div>
+              </ListItem>
+            </template>
+          </List>
         </TabPane>
       </Tabs>
     </Form>
   </Modal>
 </template>
 
-<style scoped>
-</style>
+<style lang="scss" scoped></style>

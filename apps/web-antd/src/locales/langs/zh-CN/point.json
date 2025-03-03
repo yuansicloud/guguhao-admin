@@ -1,5 +1,12 @@
 {
   "ShowAccount": "查看账户",
   "account": "账户",
-  "title": "咕币"
+  "balance": "咕币余额",
+  "lastModificationTime": "上次变动",
+  "lockedBalance": "冻结咕币",
+  "membershipName": "会员等级",
+  "recentTransaction": "近期流水",
+  "title": "咕币",
+  "totalUsed": "累计使用咕币",
+  "transaction": "流水"
 }

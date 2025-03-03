@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
-
 import type { IdentityUserDto } from '@abp/identity/types/users';
+import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
 
 import { defineAsyncComponent, h } from 'vue';
 
-import { useVbenVxeGrid } from '@abp/ui';
-import {
-BookOutlined
-} from '@ant-design/icons-vue';
 import { useVbenModal } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
-import { Button } from 'ant-design-vue';
 
 import { useUsersApi } from '@abp/identity';
+import { useVbenVxeGrid } from '@abp/ui';
+import { BookOutlined } from '@ant-design/icons-vue';
+import { Button } from 'ant-design-vue';
 
 defineOptions({
   name: 'UserAccountTable',
@@ -51,14 +48,13 @@ const gridOptions: VxeGridProps<IdentityUserDto> = {
       slots: { default: 'active' },
       title: $t('AbpIdentity.DisplayName:IsActive'),
     },
+    { field: 'phoneNumber', title: $t('AbpIdentity.DisplayName:PhoneNumber') },
+    { field: 'name', title: $t('AbpIdentity.DisplayName:Name') },
     {
       field: 'userName',
       minWidth: '100px',
       title: $t('AbpIdentity.DisplayName:UserName'),
     },
-    { field: 'surname', title: $t('AbpIdentity.DisplayName:Surname') },
-    { field: 'name', title: $t('AbpIdentity.DisplayName:Name') },
-    { field: 'phoneNumber', title: $t('AbpIdentity.DisplayName:PhoneNumber') },
     {
       field: 'action',
       fixed: 'right',
@@ -94,7 +90,7 @@ const gridOptions: VxeGridProps<IdentityUserDto> = {
 };
 
 const gridEvents: VxeGridListeners<IdentityUserDto> = {
-  cellClick: () => { },
+  cellClick: () => {},
 };
 
 const [AccountViewModal, accountModalApi] = useVbenModal({
@@ -108,11 +104,9 @@ const [Grid, { query }] = useVbenVxeGrid({
 });
 
 const handleView = (row: IdentityUserDto) => {
-  console.log(AccountViewModal);
   accountModalApi.setData(row);
   accountModalApi.open();
 };
-
 </script>
 
 <template>
@@ -128,7 +122,13 @@ const handleView = (row: IdentityUserDto) => {
     <template #action="{ row }">
       <div class="flex flex-row">
         <div class="basis-1/3">
-          <Button :icon="h(BookOutlined)" block class="text-success" type="link" @click="handleView(row)">
+          <Button
+            :icon="h(BookOutlined)"
+            block
+            class="text-success"
+            type="link"
+            @click="handleView(row)"
+          >
             {{ $t('point.ShowAccount') }}
           </Button>
         </div>
@@ -138,5 +138,4 @@ const handleView = (row: IdentityUserDto) => {
   <AccountViewModal @change="() => query()" />
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

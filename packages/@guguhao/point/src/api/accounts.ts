@@ -28,6 +28,8 @@ export function getApi(id: string): Promise<AccountDto> {
  * 获取账户
  * @param id 账户id
  */
- export function getByUserIdApi(id: string): Promise<AccountDto> {
-  return requestClient.get<AccountDto>(`/api/point-service/account/user-account/userId=${id}`);
+export function getByUserIdApi(id: string): Promise<AccountDto> {
+  return requestClient.get<AccountDto>(
+    `/api/point-service/account/user-account/${id}`,
+  );
 }
