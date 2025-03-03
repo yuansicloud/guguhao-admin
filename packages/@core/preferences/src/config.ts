@@ -4,7 +4,7 @@ const defaultPreferences: Preferences = {
   app: {
     accessMode: 'frontend',
     authPageLayout: 'panel-right',
-    checkUpdatesInterval: 1,
+    checkUpdatesInterval: 30,
     colorGrayMode: false,
     colorWeakMode: false,
     compact: false,

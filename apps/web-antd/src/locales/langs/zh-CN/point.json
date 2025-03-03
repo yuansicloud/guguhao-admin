@@ -7,9 +7,7 @@
   "balanceChangedSuccessfully": "调整成功",
   "changeAmount": "调整金额",
   "changeBalance": "调整",
-  "common": {
-    "description": "流水描述"
-  },
+  "description": "流水描述",
   "lastModificationTime": "上次变动",
   "lockedBalance": "冻结咕币",
   "membershipName": "会员等级",
