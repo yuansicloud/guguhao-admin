@@ -2,20 +2,29 @@
 import type { SortOrder } from '@abp/core';
 import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
 
-import { computed, h, onMounted, ref } from 'vue';
 import type { CharacterDto } from '../../types/characters';
 import type { ConfigDto } from '../../types/settings';
+
+import { computed, h, onMounted, ref } from 'vue';
 
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { BookOutlined, AccountBookOutlined, RedoOutlined } from '@ant-design/icons-vue';
+import {
+  AccountBookOutlined,
+  BookOutlined,
+  RedoOutlined,
+} from '@ant-design/icons-vue';
 import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { postPagedListApi, updateApi, assessCharacterApi } from '../../api/characters';
 import { convertToTemplateApi } from '../../api/character-templates';
+import {
+  assessCharacterApi,
+  postPagedListApi,
+  updateApi,
+} from '../../api/characters';
 import { getConfigApi } from '../../api/settings';
 import { useCharacter } from '../../hooks/useCharacters';
 import { state } from '../../types/characters';
@@ -30,29 +39,31 @@ const CloseIcon = createIconifyIcon('ant-design:close-outlined');
 const sorting = ref<string | undefined>(undefined);
 
 const searchConfig = ref<ConfigDto>({
+  assetCategories: {},
   careers: [],
   shapes: [],
-  assetCategories: {},
   tags: [],
 });
 
 const careerOptions = computed(() =>
-  searchConfig.value.careers.map(c => ({ label: c, value: c }))
+  searchConfig.value.careers.map((c) => ({ label: c, value: c })),
 );
 
 const shapeOptions = computed(() =>
-  searchConfig.value.shapes.map(c => ({ label: c, value: c }))
+  searchConfig.value.shapes.map((c) => ({ label: c, value: c })),
 );
 
 const tagOptions = computed(() =>
-  searchConfig.value.tags.map(c => ({ label: c, value: c }))
+  searchConfig.value.tags.map((c) => ({ label: c, value: c })),
 );
 
 const assetOptions = computed(() =>
-  Object.entries(searchConfig.value.assetCategories).flatMap(([category, assets]) => ({
-    label: category,
-    options: assets.map(a => ({ label: a.alias, value: a.alias }))
-  })),
+  Object.entries(searchConfig.value.assetCategories).flatMap(
+    ([category, assets]) => ({
+      label: category,
+      options: assets.map((a) => ({ label: a.alias, value: a.alias })),
+    }),
+  ),
 );
 
 const valueTypeOptions = Object.keys(stateDisplayMap).map((key) => {
@@ -113,10 +124,10 @@ const formOptions: VbenFormProps = {
       component: 'Select',
       componentProps: {
         allowClear: true,
+        filterable: true, // Enable local search
         mode: 'multiple',
         options: assetOptions,
         placeholder: '请选择外观',
-        filterable: true,  // Enable local search
       },
       fieldName: 'assets',
       formItemClass: 'col-span-1 items-baseline',
@@ -203,6 +214,32 @@ const formOptions: VbenFormProps = {
       fieldName: 'maxAchievementPoint',
       formItemClass: 'col-span-1 items-baseline',
       label: '最大成就',
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          { label: $t('jx3.all'), value: null },
+          { label: $t('AbpUi.Yes'), value: true },
+          { label: $t('AbpUi.No'), value: false },
+        ],
+      },
+      fieldName: 'ShowOnlySuggested',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '只显示推荐',
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          { label: $t('jx3.all'), value: null },
+          { label: '已获取', value: true },
+          { label: '未获取', value: false },
+        ],
+      },
+      fieldName: 'isFetched',
+      formItemClass: 'col-span-1 items-baseline',
+      label: $t('JX3.CharacterDescription'),
     },
   ],
   // 控制表单是否显示折叠按钮
@@ -390,7 +427,7 @@ const gridOptions: VxeGridProps<CharacterDto> = {
 };
 
 const gridEvents: VxeGridListeners<CharacterDto> = {
-  cellClick: () => { },
+  cellClick: () => {},
   sortChange: onSort,
 };
 
@@ -402,7 +439,6 @@ const [Grid, { query }] = useVbenVxeGrid({
 
 onMounted(async () => {
   searchConfig.value = await getConfigApi(true);
-  console.log(searchConfig.value)
 });
 
 function onSort(params: { field: string; order: SortOrder }) {
@@ -477,19 +513,35 @@ const handleConvertCharacterToTemplate = (row: CharacterDto) => {
     <template #action="{ row }">
       <div class="flex flex-row">
         <div class="basis-1/3">
-          <Button :icon="h(RedoOutlined)" block type="link" class="text-success" @click="handleFetchCharacter(row)">
+          <Button
+            :icon="h(RedoOutlined)"
+            block
+            type="link"
+            class="text-success"
+            @click="handleFetchCharacter(row)"
+          >
             {{ $t('jx3.fetchWBLAppearanceInfo') }}
           </Button>
         </div>
         <div class="basis-1/3">
-          <Button :icon="h(AccountBookOutlined)" block type="link" class="text-primary"
-            @click="handleAssessCharacter(row)">
+          <Button
+            :icon="h(AccountBookOutlined)"
+            block
+            type="link"
+            class="text-primary"
+            @click="handleAssessCharacter(row)"
+          >
             {{ $t('jx3.assess') }}
           </Button>
         </div>
         <div class="basis-1/3">
-          <Button :icon="h(BookOutlined)" block type="link" class="text-warning"
-            @click="handleConvertCharacterToTemplate(row)">
+          <Button
+            :icon="h(BookOutlined)"
+            block
+            type="link"
+            class="text-warning"
+            @click="handleConvertCharacterToTemplate(row)"
+          >
             {{ $t('jx3.convertToTemplate') }}
           </Button>
         </div>

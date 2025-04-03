@@ -23,6 +23,14 @@ const routes: RouteRecordRaw[] = [
       },
       {
         meta: {
+          title: $t('jx3.game-items'),
+        },
+        name: 'JX3GameItems',
+        path: '/game-items',
+        component: () => import('#/views/jx3/game-items/index.vue'),
+      },
+      {
+        meta: {
           title: $t('jx3.characters'),
         },
         name: 'JX3Characters',

@@ -11,14 +11,18 @@ import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { DeleteOutlined, EditOutlined, RedoOutlined } from '@ant-design/icons-vue';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  RedoOutlined,
+} from '@ant-design/icons-vue';
 import { Button, message, Modal, Tag } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import {
-deleteApi,
-fetchWBLAppearanceInfoApi,
-getPagedListApi,
+  deleteApi,
+  fetchWBLAppearanceInfoApi,
+  getPagedListApi,
 } from '../../api/assets';
 import { useAssets } from '../../hooks/useAssets';
 import { AssetType } from '../../types/assets';
@@ -76,6 +80,32 @@ const formOptions: VbenFormProps = {
       fieldName: 'maxPrice',
       label: '最大价格',
       labelWidth: 100,
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          { label: $t('jx3.all'), value: null },
+          { label: $t('AbpUi.Yes'), value: true },
+          { label: $t('AbpUi.No'), value: false },
+        ],
+      },
+      fieldName: 'IsHighValue',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '只显示高价值',
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          { label: $t('jx3.all'), value: null },
+          { label: $t('AbpUi.Yes'), value: true },
+          { label: $t('AbpUi.No'), value: false },
+        ],
+      },
+      fieldName: 'IsUnique',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '只显示绝版',
     },
   ],
   // 控制表单是否显示折叠按钮
@@ -253,7 +283,7 @@ const gridOptions: VxeGridProps<AssetDto> = {
 };
 
 const gridEvents: VxeGridListeners<AssetDto> = {
-  cellClick: () => { },
+  cellClick: () => {},
   sortChange: onSort,
 };
 
@@ -357,18 +387,34 @@ const getCheckedRows = async () => {
     <template #action="{ row }">
       <div class="flex flex-row">
         <div class="basis-1/3">
-          <Button :icon="h(EditOutlined)" block type="link" @click="handleEdit(row)">
+          <Button
+            :icon="h(EditOutlined)"
+            block
+            type="link"
+            @click="handleEdit(row)"
+          >
             {{ $t('AbpUi.Edit') }}
           </Button>
         </div>
         <div class="basis-1/3">
-          <Button :icon="h(RedoOutlined)" block type="link" class="text-success"
-            @click="handleFetchWBLAppearanceInfo(row)">
+          <Button
+            :icon="h(RedoOutlined)"
+            block
+            type="link"
+            class="text-success"
+            @click="handleFetchWBLAppearanceInfo(row)"
+          >
             {{ $t('jx3.fetchWBLAppearanceInfo') }}
           </Button>
         </div>
         <div class="basis-1/3">
-          <Button :icon="h(DeleteOutlined)" block type="link" danger @click="handleDelete(row)">
+          <Button
+            :icon="h(DeleteOutlined)"
+            block
+            type="link"
+            danger
+            @click="handleDelete(row)"
+          >
             {{ $t('AbpUi.Delete') }}
           </Button>
         </div>

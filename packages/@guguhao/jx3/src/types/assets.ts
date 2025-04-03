@@ -40,6 +40,11 @@ export enum AssetType {
   Hair = 2,
 
   // / <summary>
+  // / 头饰
+  // / </summary>
+  HeadPendent = 30,
+
+  // / <summary>
   // / 坐骑
   // / </summary>
   Horse = 15,
@@ -96,11 +101,6 @@ export enum AssetType {
   // / 武器拓印
   // / </summary>
   Weapon = 6,
-
-  // / <summary>
-  // / 头饰
-  // / </summary>
-  HeadPendent = 30,
 }
 
 interface AssetDto {

@@ -26,8 +26,6 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@guguhao/point": "workspace:*",
-    "@guguhao/jx3": "workspace:*",
     "@abp/account": "workspace:*",
     "@abp/core": "workspace:*",
     "@abp/identity": "workspace:*",
@@ -36,6 +34,8 @@
     "@abp/request": "workspace:*",
     "@abp/settings": "workspace:*",
     "@abp/ui": "workspace:*",
+    "@guguhao/jx3": "workspace:*",
+    "@guguhao/point": "workspace:*",
     "@vben/access": "workspace:*",
     "@vben/common-ui": "workspace:*",
     "@vben/constants": "workspace:*",
