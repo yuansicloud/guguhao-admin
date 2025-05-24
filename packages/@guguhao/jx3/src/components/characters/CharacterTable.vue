@@ -241,6 +241,19 @@ const formOptions: VbenFormProps = {
       formItemClass: 'col-span-1 items-baseline',
       label: $t('JX3.CharacterDescription'),
     },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          { label: $t('jx3.all'), value: null },
+          { label: '万宝楼', value: 0 },
+          { label: '剑三商会', value: 1 },
+        ],
+      },
+      fieldName: 'DetailSource',
+      formItemClass: 'col-span-1 items-baseline',
+      label: $t('JX3.CharacterDetailSource'),
+    },
   ],
   // 控制表单是否显示折叠按钮
   showCollapseButton: true,
