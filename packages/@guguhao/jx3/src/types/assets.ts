@@ -115,6 +115,7 @@ interface AssetDto {
   getSource?: number;
   id: string;
   isHighValue: boolean;
+  isRare: boolean;
   isUnique: boolean;
   lastModificationTime?: string;
   lastModifierId?: string;
@@ -135,6 +136,7 @@ interface CreateUpdateAssetDto {
   description?: string;
   getSource?: number;
   isHighValue: boolean;
+  isRare: boolean;
   isUnique: boolean;
   mediaResources?: string;
   name: string;
@@ -148,6 +150,8 @@ interface AssetGetListInput extends PagedAndSortedResultRequestDto {
   assetType?: AssetType;
   filter?: string;
   IsHighValue?: boolean;
+  isRare?: boolean;
+  isUnique?: boolean;
   MaxPrice?: number;
   MinPrice?: number;
 }

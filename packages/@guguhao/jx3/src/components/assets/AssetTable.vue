@@ -103,6 +103,19 @@ const formOptions: VbenFormProps = {
           { label: $t('AbpUi.No'), value: false },
         ],
       },
+      fieldName: 'IsRare',
+      formItemClass: 'col-span-1 items-baseline',
+      label: '只显示独特',
+    },
+    {
+      component: 'RadioGroup',
+      componentProps: {
+        options: [
+          { label: $t('jx3.all'), value: null },
+          { label: $t('AbpUi.Yes'), value: true },
+          { label: $t('AbpUi.No'), value: false },
+        ],
+      },
       fieldName: 'IsUnique',
       formItemClass: 'col-span-1 items-baseline',
       label: '只显示绝版',
@@ -247,6 +260,13 @@ const gridOptions: VxeGridProps<AssetDto> = {
       width: 'auto',
     },
     {
+      align: 'center',
+      field: 'isRare',
+      slots: { default: 'isRare' },
+      title: $t('JX3.AssetIsRare'),
+      width: 'auto',
+    },
+    {
       field: 'action',
       fixed: 'right',
       slots: { default: 'action' },
@@ -376,6 +396,12 @@ const getCheckedRows = async () => {
     <template #isUnique="{ row }">
       <div class="flex flex-row justify-center">
         <CheckIcon v-if="row.isUnique" class="text-green-500" />
+        <CloseIcon v-else class="text-red-500" />
+      </div>
+    </template>
+    <template #isRare="{ row }">
+      <div class="flex flex-row justify-center">
+        <CheckIcon v-if="row.isRare" class="text-green-500" />
         <CloseIcon v-else class="text-red-500" />
       </div>
     </template>
