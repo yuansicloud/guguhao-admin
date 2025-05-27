@@ -13,15 +13,16 @@ import { SvgBellIcon, SvgCakeIcon, SvgCardIcon } from '@vben/icons';
 
 import { getCDNData, getCDNTopData } from '#/api/core/administration';
 
+import AnalyticsSession from './analytics-session.vue';
 import AnalyticsTrends from './analytics-trends.vue';
 import AnalyticsVisitsSales from './analytics-visits-sales.vue';
 import AnalyticsVisitsSource from './analytics-visits-source.vue';
 import AnalyticsVisits from './analytics-visits.vue';
 
-const dayDataModel = ref<{ time: string; value: number }>([]);
-const monthDataModel = ref<{ time: string; value: number }>([]);
-const deviceDataModel = ref<{ time: string; value: number }>([]);
-const browserDataModel = ref<{ time: string; value: number }>([]);
+const dayDataModel = ref<{ time: string; value: number }[]>([]);
+const monthDataModel = ref<{ time: string; value: number }[]>([]);
+const deviceDataModel = ref<{ name: string; value: number }[]>([]);
+const browserDataModel = ref<{ name: string; value: number }[]>([]);
 const overviewItems = ref<AnalysisOverviewItem[]>();
 overviewItems.value = [];
 
@@ -111,6 +112,7 @@ const chartTabs: TabOption[] = [
 <template>
   <div class="p-5">
     <AnalysisOverview :items="overviewItems" />
+    <AnalyticsSession />
     <AnalysisChartsTabs :tabs="chartTabs" class="mt-5">
       <template #trends>
         <AnalyticsTrends :data="dayDataModel" />
