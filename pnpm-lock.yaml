@@ -701,6 +701,9 @@ importers:
       '@abp/ui':
         specifier: workspace:*
         version: link:../../packages/@abp/ui
+      '@guguhao/eshop':
+        specifier: workspace:*
+        version: link:../../packages/@guguhao/eshop
       '@guguhao/jx3':
         specifier: workspace:*
         version: link:../../packages/@guguhao/jx3
@@ -1954,6 +1957,54 @@ importers:
       vue:
         specifier: ^3.5.13
         version: 3.5.14(typescript@5.8.3)
+
+  packages/@guguhao/eshop:
+    dependencies:
+      '@abp/core':
+        specifier: workspace:*
+        version: link:../../@abp/core
+      '@abp/identity':
+        specifier: workspace:*
+        version: link:../../@abp/identity
+      '@abp/request':
+        specifier: workspace:*
+        version: link:../../@abp/request
+      '@abp/ui':
+        specifier: workspace:*
+        version: link:../../@abp/ui
+      '@ant-design/icons-vue':
+        specifier: 'catalog:'
+        version: 7.0.1(vue@3.5.14(typescript@5.8.3))
+      '@vben/access':
+        specifier: workspace:*
+        version: link:../../effects/access
+      '@vben/common-ui':
+        specifier: workspace:*
+        version: link:../../effects/common-ui
+      '@vben/hooks':
+        specifier: workspace:*
+        version: link:../../effects/hooks
+      '@vben/icons':
+        specifier: workspace:*
+        version: link:../../icons
+      '@vben/layouts':
+        specifier: workspace:*
+        version: link:../../effects/layouts
+      '@vben/locales':
+        specifier: workspace:*
+        version: link:../../locales
+      ant-design-vue:
+        specifier: 'catalog:'
+        version: 4.2.6(vue@3.5.14(typescript@5.8.3))
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.13
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.14(typescript@5.8.3)
+      vxe-table:
+        specifier: 'catalog:'
+        version: 4.13.31(vue@3.5.14(typescript@5.8.3))
 
   packages/@guguhao/jx3:
     dependencies:

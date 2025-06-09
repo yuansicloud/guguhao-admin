@@ -149,6 +149,10 @@
       "path": "packages/@guguhao/point",
     },
     {
+      "name": "@guguhao/eshop",
+      "path": "packages/@guguhao/eshop",
+    },
+    {
       "name": "@vben/constants",
       "path": "packages/constants",
     },

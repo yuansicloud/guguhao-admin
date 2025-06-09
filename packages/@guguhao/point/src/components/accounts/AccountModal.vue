@@ -15,6 +15,7 @@ import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { formatToDateTime } from '@abp/core';
+import { useUsersApi } from '@abp/identity';
 import {
   Button,
   Form,
@@ -49,6 +50,9 @@ const changeBalanceForm = ref<ChangeAccountBalanceInput>({
 });
 
 const { hasAccessByCodes } = useAccess();
+const { getApi: getUserApi } = useUsersApi();
+
+const userDetail = ref<IdentityUserDto | null>(null);
 
 const [Modal, modalApi] = useVbenModal({
   draggable: true,
@@ -67,12 +71,20 @@ const [Modal, modalApi] = useVbenModal({
       const userDto = modalApi.getData<IdentityUserDto>();
       modalApi.setState({
         loading: true,
-        title: `${userDto.name} - ${userDto.phoneNumber}`,
+        title: `${userDto.name ?? '大侠'} - ${userDto.phoneNumber}`,
       });
       try {
         if (userDto?.id) {
           formModel.value = await getByUserIdApi(userDto.id);
           await initTransactions(userDto.id);
+          // fetch user detail from API
+          userDetail.value = await getUserApi(userDto.id);
+          // update modal title with latest user info
+          if (userDetail.value) {
+            modalApi.setState({
+              title: `${userDetail.value.name ?? '大侠'} - ${userDetail.value.phoneNumber || ''}`,
+            });
+          }
         }
       } finally {
         modalApi.setState({
@@ -128,6 +140,51 @@ const handleChangeBalance = async () => {
       :wrapper-col="{ span: 18 }"
     >
       <Tabs v-model:active-key="activedTab">
+        <!-- 用户详情 -->
+        <TabPane key="userDetail" tab="用户详情">
+          <Form :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+            <FormItem :label="$t('AbpIdentity.UserName')">
+              <Input :value="userDetail?.name ?? '大侠'" disabled />
+            </FormItem>
+            <FormItem :label="$t('AbpIdentity.PhoneNumber')">
+              <Input :value="userDetail?.phoneNumber" disabled />
+            </FormItem>
+            <FormItem label="邮箱">
+              <Input :value="userDetail?.email" disabled />
+            </FormItem>
+            <FormItem label="用户名">
+              <Input :value="userDetail?.userName" disabled />
+            </FormItem>
+            <FormItem :label="$t('AbpIdentity.IsActive')">
+              <Input
+                :value="
+                  userDetail?.isActive ? $t('common.yes') : $t('common.no')
+                "
+                disabled
+              />
+            </FormItem>
+            <FormItem label="邮箱验证">
+              <Input
+                :value="
+                  userDetail?.emailConfirmed
+                    ? $t('common.yes')
+                    : $t('common.no')
+                "
+                disabled
+              />
+            </FormItem>
+            <FormItem label="手机验证">
+              <Input
+                :value="
+                  userDetail?.phoneNumberConfirmed
+                    ? $t('common.yes')
+                    : $t('common.no')
+                "
+                disabled
+              />
+            </FormItem>
+          </Form>
+        </TabPane>
         <!-- 基本信息 -->
         <TabPane key="info" :tab="$t('AbpIdentity.UserInformations')">
           <FormItem :label="$t('point.balance')" name="balance">

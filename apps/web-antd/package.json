@@ -34,6 +34,7 @@
     "@abp/request": "workspace:*",
     "@abp/settings": "workspace:*",
     "@abp/ui": "workspace:*",
+    "@guguhao/eshop": "workspace:*",
     "@guguhao/jx3": "workspace:*",
     "@guguhao/point": "workspace:*",
     "@vben/access": "workspace:*",
