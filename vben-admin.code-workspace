@@ -141,16 +141,16 @@
       "path": "packages/@core/ui-kit/tabs-ui",
     },
     {
+      "name": "@guguhao/eshop",
+      "path": "packages/@guguhao/eshop",
+    },
+    {
       "name": "@guguhao/jx3",
       "path": "packages/@guguhao/jx3",
     },
     {
       "name": "@guguhao/point",
       "path": "packages/@guguhao/point",
-    },
-    {
-      "name": "@guguhao/eshop",
-      "path": "packages/@guguhao/eshop",
     },
     {
       "name": "@vben/constants",

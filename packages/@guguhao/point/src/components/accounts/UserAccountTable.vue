@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IdentityUserDto } from '@abp/identity/types/users';
+import type { IdentityUserDto } from '@abp/identity';
 import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
 
 import { defineAsyncComponent, h } from 'vue';
@@ -10,7 +10,7 @@ import { $t } from '@vben/locales';
 
 import { useUsersApi } from '@abp/identity';
 import { useVbenVxeGrid } from '@abp/ui';
-import { BookOutlined } from '@ant-design/icons-vue';
+import { BookOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { Button } from 'ant-design-vue';
 
 defineOptions({
@@ -18,6 +18,9 @@ defineOptions({
 });
 
 const AccountModal = defineAsyncComponent(() => import('./AccountModal.vue'));
+const PrivateMessageModal = defineAsyncComponent(
+  () => import('./PrivateMessageModal.vue'),
+);
 
 const CheckIcon = createIconifyIcon('ant-design:check-outlined');
 const CloseIcon = createIconifyIcon('ant-design:close-outlined');
@@ -97,6 +100,10 @@ const [AccountViewModal, accountModalApi] = useVbenModal({
   connectedComponent: AccountModal,
 });
 
+const [MessageModal, messageModalApi] = useVbenModal({
+  connectedComponent: PrivateMessageModal,
+});
+
 const [Grid, { query }] = useVbenVxeGrid({
   formOptions,
   gridEvents,
@@ -106,6 +113,11 @@ const [Grid, { query }] = useVbenVxeGrid({
 const handleView = (row: IdentityUserDto) => {
   accountModalApi.setData(row);
   accountModalApi.open();
+};
+
+const handleSendMessage = (row: IdentityUserDto) => {
+  messageModalApi.setData(row);
+  messageModalApi.open();
 };
 </script>
 
@@ -121,7 +133,7 @@ const handleView = (row: IdentityUserDto) => {
     </template>
     <template #action="{ row }">
       <div class="flex flex-row">
-        <div class="basis-1/3">
+        <div class="basis-1/2">
           <Button
             :icon="h(BookOutlined)"
             block
@@ -132,10 +144,22 @@ const handleView = (row: IdentityUserDto) => {
             {{ $t('point.ShowAccount') }}
           </Button>
         </div>
+        <div class="basis-1/2">
+          <Button
+            :icon="h(MessageOutlined)"
+            block
+            class="text-primary"
+            type="link"
+            @click="handleSendMessage(row)"
+          >
+            发送私信
+          </Button>
+        </div>
       </div>
     </template>
   </Grid>
   <AccountViewModal @change="() => query()" />
+  <MessageModal @change="() => query()" />
 </template>
 
 <style lang="scss" scoped></style>
