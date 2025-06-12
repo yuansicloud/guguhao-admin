@@ -3,13 +3,14 @@ import type { IdentityUserDto } from '@abp/identity';
 
 import type { PrivateMessageRequest } from '../../types/private-messages';
 
-import { defineOptions, ref } from 'vue';
+import { computed, defineOptions, ref } from 'vue';
 
 import { useVbenModal } from '@vben/common-ui';
 
 import { Form, Input, message, Select } from 'ant-design-vue';
 
 import { sendPrivateMessage } from '../../api/private-messages';
+import RichTextEditor from '../editor/RichTextEditor.vue';
 
 defineOptions({
   name: 'PrivateMessageModal',
@@ -22,20 +23,22 @@ const Option = Select.Option;
 
 const messageForm = ref<PrivateMessageRequest>({
   toUserId: '',
-  category: 'PointService',
+  category: 'SystemAnnouncement',
   content: '',
   title: '',
 });
 
+const editorRef = ref();
+
 const categories = [
+  { label: '系统公告', value: 'SystemAnnouncement' },
   { label: '咕币消息', value: 'PointService' },
   { label: '蹲号消息', value: 'JX3SearchTemplate' },
-  { label: '系统公告', value: 'SystemAnnouncement' },
 ];
 
 const [Modal, modalApi] = useVbenModal({
   draggable: true,
-  fullscreenButton: false,
+  fullscreenButton: true,
   onCancel() {
     modalApi.close();
   },
@@ -50,7 +53,7 @@ const [Modal, modalApi] = useVbenModal({
       const userDto = modalApi.getData<IdentityUserDto>();
       if (userDto?.id) {
         messageForm.value.toUserId = userDto.id;
-        messageForm.value.title = `来自管理员的消息 - ${new Date().toLocaleDateString()}`;
+        messageForm.value.title = `系统公告`;
         modalApi.setState({
           title: `发送私信 - ${userDto.name ?? '用户'} (${userDto.userName})`,
         });
@@ -60,10 +63,15 @@ const [Modal, modalApi] = useVbenModal({
   title: '发送私信',
 });
 
+const editorHeight = computed(() => {
+  const state = modalApi.useStore((state) => state.fullscreen);
+  return state.value ? 'calc(100vh - 300px)' : '200px';
+});
+
 const resetForm = () => {
   messageForm.value = {
     toUserId: '',
-    category: 'PointService',
+    category: 'SystemAnnouncement',
     content: '',
     title: '',
   };
@@ -71,14 +79,20 @@ const resetForm = () => {
 
 const handleSendMessage = async () => {
   try {
+    // Get the HTML content using the editor reference
+    const editorContent = editorRef.value?.getHTML();
+
     // Form validation
-    if (!messageForm.value.content.trim()) {
+    if (!editorContent) {
       message.error('消息内容不能为空');
       return;
     }
 
     // Send message using API
-    await sendPrivateMessage(messageForm.value);
+    await sendPrivateMessage({
+      ...messageForm.value,
+      content: editorContent,
+    });
 
     message.success('消息发送成功');
     modalApi.close();
@@ -124,31 +138,21 @@ defineExpose({
       </FormItem>
 
       <FormItem label="消息内容" name="content">
-        <div class="rich-text-editor-container">
-          <Input.TextArea
-            v-model:value="messageForm.content"
-            :rows="8"
-            placeholder="请输入消息内容"
-            :maxlength="1000"
-            show-count
-            class="rich-text-editor"
-          />
-        </div>
+        <RichTextEditor
+          ref="editorRef"
+          id="editor"
+          v-model="messageForm.content"
+          placeholder="请输入消息内容"
+          :height="editorHeight"
+          :max-length="1000"
+          theme="snow"
+        />
       </FormItem>
     </Form>
   </Modal>
 </template>
 
 <style lang="scss" scoped>
-.rich-text-editor-container {
-  width: 100%;
-
-  .rich-text-editor {
-    width: 100%;
-    border-radius: 4px;
-  }
-}
-
 .ml-2 {
   margin-left: 8px;
 }

@@ -20,8 +20,8 @@
     }
   },
   "dependencies": {
-    "@abp/identity": "workspace:*",
     "@abp/core": "workspace:*",
+    "@abp/identity": "workspace:*",
     "@abp/request": "workspace:*",
     "@abp/ui": "workspace:*",
     "@ant-design/icons-vue": "catalog:",
@@ -31,9 +31,10 @@
     "@vben/icons": "workspace:*",
     "@vben/layouts": "workspace:*",
     "@vben/locales": "workspace:*",
+    "@vueup/vue-quill": "catalog:",
     "ant-design-vue": "catalog:",
+    "dayjs": "catalog:",
     "vue": "catalog:*",
-    "vxe-table": "catalog:",
-    "dayjs": "catalog:"
+    "vxe-table": "catalog:"
   }
 }

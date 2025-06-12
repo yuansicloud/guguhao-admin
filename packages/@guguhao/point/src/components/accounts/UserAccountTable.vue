@@ -98,10 +98,12 @@ const gridEvents: VxeGridListeners<IdentityUserDto> = {
 
 const [AccountViewModal, accountModalApi] = useVbenModal({
   connectedComponent: AccountModal,
+  fullscreenButton: true,
 });
 
 const [MessageModal, messageModalApi] = useVbenModal({
   connectedComponent: PrivateMessageModal,
+  fullscreenButton: true,
 });
 
 const [Grid, { query }] = useVbenVxeGrid({
