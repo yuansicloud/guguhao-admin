@@ -2,18 +2,20 @@
 import type { SortOrder } from '@abp/core';
 import type { VbenFormProps, VxeGridListeners, VxeGridProps } from '@abp/ui';
 
+import type { AssessmentDto } from '../../types/assessments';
+
 import { h, onMounted, ref } from 'vue';
+
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { RedoOutlined } from '@ant-design/icons-vue';
+import { CheckOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import { Button, message, Modal } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import { getPagedListApi } from '../../api/assessments';
 import { assessCharacterTemplateApi } from '../../api/character-templates';
 import { assessCharacterApi } from '../../api/characters';
-import type { AssessmentDto } from '../../types/assessments';
 
 defineOptions({
   name: 'AssessmentTable',
@@ -21,12 +23,10 @@ defineOptions({
 
 const sorting = ref<string | undefined>(undefined);
 
-
 const formOptions: VbenFormProps = {
   // 默认展开
   collapsed: false,
-  schema: [
-  ],
+  schema: [],
   // 控制表单是否显示折叠按钮
   showCollapseButton: true,
   // 按下回车时是否提交表单
@@ -38,6 +38,13 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
     resizable: true,
   },
   columns: [
+    {
+      align: 'center',
+      field: 'sequence',
+      sortable: true,
+      title: '编号',
+      width: 100,
+    },
     {
       align: 'center',
       field: 'description',
@@ -87,9 +94,22 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
             0: '万宝楼',
             1: '模板',
           };
-          return types[row.characterType] || '-';
-        }
-      }
+          return types[row.characterType as keyof typeof types] || '-';
+        },
+      },
+    },
+    {
+      align: 'center',
+      field: 'isSystem',
+      title: '系统自动',
+      width: 100,
+      slots: {
+        default: ({ row }) => {
+          return row.creatorId === null
+            ? h(CheckOutlined, { style: { color: '#52c41a' } })
+            : '-';
+        },
+      },
     },
     {
       align: 'center',
@@ -104,15 +124,13 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
               class: {
                 'text-success': row.isCompleted,
                 'text-warning': row.isInProgress && !row.isCompleted,
-                'text-error': !row.isCompleted && !row.isInProgress
-              }
+                'text-error': !row.isCompleted && !row.isInProgress,
+              },
             },
-            row.isCompleted
-              ? '已完成'
-              : '进行中'
-          )
-        ]
-      }
+            row.isCompleted ? '已完成' : '进行中',
+          ),
+        ],
+      },
     },
     // {
     //   align: 'center',
@@ -143,8 +161,8 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
         default: ({ row }) =>
           row.modelDate && dayjs(row.modelDate).isValid()
             ? dayjs(row.modelDate).format('YYYY-MM-DD')
-            : '-'
-      }
+            : '-',
+      },
     },
     {
       align: 'right',
@@ -158,8 +176,9 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
       title: '相似角色',
       width: 200,
       slots: {
-        default: ({ row }) => row.similarCharacters?.length || 0
-      }
+        default: ({ row }) =>
+          (row.similarCharacters?.length || 0) as unknown as string,
+      },
     },
     {
       align: 'center',
@@ -167,8 +186,9 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
       title: '预测结果',
       width: 200,
       slots: {
-        default: ({ row }) => row.predictionResults?.length || 0
-      }
+        default: ({ row }) =>
+          (row.predictionResults?.length || 0) as unknown as string,
+      },
     },
     {
       align: 'center',
@@ -176,8 +196,8 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
       title: '置信度',
       width: 150,
       slots: {
-        default: ({ row }) => `${Math.round((row.confidence || 0))}%`
-      }
+        default: ({ row }) => `${Math.round(row.confidence || 0)}%`,
+      },
     },
     {
       align: 'center',
@@ -185,7 +205,7 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
       slots: {
         default: ({ row }) => {
           return row.creationTime && dayjs(row.creationTime).isValid()
-            ? dayjs(row.creationTime).format('YYYY-MM-DD')
+            ? dayjs(row.creationTime).format('YYYY-MM-DD HH:mm')
             : '';
         },
       },
@@ -200,7 +220,7 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
         default: ({ row }) => {
           return row.lastModificationTime &&
             dayjs(row.lastModificationTime).isValid()
-            ? dayjs(row.lastModificationTime).format('YYYY-MM-DD')
+            ? dayjs(row.lastModificationTime).format('YYYY-MM-DD HH:mm')
             : '';
         },
       },
@@ -244,7 +264,7 @@ const gridOptions: VxeGridProps<AssessmentDto> = {
 };
 
 const gridEvents: VxeGridListeners<AssessmentDto> = {
-  cellClick: () => { },
+  cellClick: () => {},
   sortChange: onSort,
 };
 
@@ -254,8 +274,7 @@ const [Grid, { query }] = useVbenVxeGrid({
   gridOptions,
 });
 
-onMounted(async () => {
-});
+onMounted(async () => {});
 
 function onSort(params: { field: string; order: SortOrder }) {
   const sort = params.order ? `${params.field} ${params.order}` : undefined;
@@ -264,7 +283,8 @@ function onSort(params: { field: string; order: SortOrder }) {
 }
 
 const handleAssessCharacter = (row: AssessmentDto) => {
-  var api = row.characterType === 0 ? assessCharacterApi : assessCharacterTemplateApi;
+  const api =
+    row.characterType === 0 ? assessCharacterApi : assessCharacterTemplateApi;
   Modal.confirm({
     centered: true,
     content: $t('jx3.WillAssessCharacter'),
@@ -276,7 +296,6 @@ const handleAssessCharacter = (row: AssessmentDto) => {
     title: $t('AbpUi.AreYouSure'),
   });
 };
-
 </script>
 
 <template>
@@ -284,7 +303,13 @@ const handleAssessCharacter = (row: AssessmentDto) => {
     <template #action="{ row }">
       <div class="flex flex-row">
         <div class="basis-1/3">
-          <Button :icon="h(RedoOutlined)" block type="link" class="text-success" @click="handleAssessCharacter(row)">
+          <Button
+            :icon="h(RedoOutlined)"
+            block
+            type="link"
+            class="text-success"
+            @click="handleAssessCharacter(row)"
+          >
             {{ $t('jx3.refresh') }}
           </Button>
         </div>

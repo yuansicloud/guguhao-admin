@@ -4,3 +4,8 @@ export interface PrivateMessageRequest {
   title: string;
   toUserId: string;
 }
+
+export interface SystemMessageRequest {
+  title: string;
+  content: string;
+}

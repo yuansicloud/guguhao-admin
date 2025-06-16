@@ -10,7 +10,11 @@ import { $t } from '@vben/locales';
 
 import { useUsersApi } from '@abp/identity';
 import { useVbenVxeGrid } from '@abp/ui';
-import { BookOutlined, MessageOutlined } from '@ant-design/icons-vue';
+import {
+  BookOutlined,
+  MessageOutlined,
+  NotificationOutlined,
+} from '@ant-design/icons-vue';
 import { Button } from 'ant-design-vue';
 
 defineOptions({
@@ -20,6 +24,9 @@ defineOptions({
 const AccountModal = defineAsyncComponent(() => import('./AccountModal.vue'));
 const PrivateMessageModal = defineAsyncComponent(
   () => import('./PrivateMessageModal.vue'),
+);
+const SystemMessageModal = defineAsyncComponent(
+  () => import('./SystemMessageModal.vue'),
 );
 
 const CheckIcon = createIconifyIcon('ant-design:check-outlined');
@@ -106,6 +113,11 @@ const [MessageModal, messageModalApi] = useVbenModal({
   fullscreenButton: true,
 });
 
+const [SystemModal, systemModalApi] = useVbenModal({
+  connectedComponent: SystemMessageModal,
+  fullscreenButton: true,
+});
+
 const [Grid, { query }] = useVbenVxeGrid({
   formOptions,
   gridEvents,
@@ -121,10 +133,23 @@ const handleSendMessage = (row: IdentityUserDto) => {
   messageModalApi.setData(row);
   messageModalApi.open();
 };
+
+const handleSendSystemMessage = () => {
+  systemModalApi.open();
+};
 </script>
 
 <template>
   <Grid :table-title="$t('AbpIdentity.Users')">
+    <template #toolbar-tools>
+      <Button
+        :icon="h(NotificationOutlined)"
+        type="primary"
+        @click="handleSendSystemMessage"
+      >
+        发送系统公告
+      </Button>
+    </template>
     <template #active="{ row }">
       <div class="flex flex-row justify-center">
         <div :class="row.isActive ? 'text-green-600' : 'text-red-600'">
@@ -162,6 +187,7 @@ const handleSendMessage = (row: IdentityUserDto) => {
   </Grid>
   <AccountViewModal @change="() => query()" />
   <MessageModal @change="() => query()" />
+  <SystemModal @change="() => query()" />
 </template>
 
 <style lang="scss" scoped></style>
