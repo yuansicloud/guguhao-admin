@@ -4,6 +4,7 @@ import type {
   AccountDto,
   AccountGetListInput,
   ChangeAccountBalanceInput,
+  ChangeAccountCouponsInput,
 } from '../types/accounts';
 
 import { requestClient } from '@abp/request';
@@ -51,6 +52,23 @@ export function changeBalanceApi(
 ): Promise<AccountDto> {
   return requestClient.post<AccountDto>(
     `/api/point-service/account/${id}/change-balance`,
+    data,
+  );
+}
+
+/**
+ * Changes the coupons of an account.
+ *
+ * @param id The unique identifier of the account.
+ * @param data The input data containing the new coupons information.
+ * @returns A promise that resolves to the updated account details.
+ */
+export function changeCouponsApi(
+  id: string,
+  data: ChangeAccountCouponsInput,
+): Promise<AccountDto> {
+  return requestClient.post<AccountDto>(
+    `/api/point-service/account/${id}/change-coupons`,
     data,
   );
 }

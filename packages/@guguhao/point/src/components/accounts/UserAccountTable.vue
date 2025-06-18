@@ -70,7 +70,7 @@ const gridOptions: VxeGridProps<IdentityUserDto> = {
       fixed: 'right',
       slots: { default: 'action' },
       title: $t('AbpUi.Actions'),
-      width: 220,
+      width: 200,
     },
   ],
   exportConfig: {},
@@ -159,29 +159,25 @@ const handleSendSystemMessage = () => {
       </div>
     </template>
     <template #action="{ row }">
-      <div class="flex flex-row">
-        <div class="basis-1/2">
-          <Button
-            :icon="h(BookOutlined)"
-            block
-            class="text-success"
-            type="link"
-            @click="handleView(row)"
-          >
-            {{ $t('point.ShowAccount') }}
-          </Button>
-        </div>
-        <div class="basis-1/2">
-          <Button
-            :icon="h(MessageOutlined)"
-            block
-            class="text-primary"
-            type="link"
-            @click="handleSendMessage(row)"
-          >
-            发送私信
-          </Button>
-        </div>
+      <div class="flex flex-row items-center justify-center space-x-2">
+        <Button
+          :icon="h(BookOutlined)"
+          class="text-success"
+          size="small"
+          type="link"
+          @click="handleView(row)"
+        >
+          {{ $t('point.ShowAccount') }}
+        </Button>
+        <Button
+          :icon="h(MessageOutlined)"
+          class="text-primary"
+          size="small"
+          type="link"
+          @click="handleSendMessage(row)"
+        >
+          发送私信
+        </Button>
       </div>
     </template>
   </Grid>

@@ -6,6 +6,6 @@ export interface PrivateMessageRequest {
 }
 
 export interface SystemMessageRequest {
-  title: string;
   content: string;
+  title: string;
 }

@@ -21,6 +21,14 @@ const routes: RouteRecordRaw[] = [
         path: '/accounts',
         component: () => import('#/views/point/accounts/index.vue'),
       },
+      {
+        meta: {
+          title: $t('point.userAccount'),
+        },
+        name: 'PointUserAccounts',
+        path: '/user-accounts',
+        component: () => import('#/views/point/useraccounts/index.vue'),
+      },
     ],
   },
 ];

@@ -1,22 +1,50 @@
 import type { PagedAndSortedResultRequestDto } from '@abp/core';
 
 interface AccountDto {
+  balance: number;
+  coupons: number;
   creationTime?: string;
   deletionTime?: string;
+  experience: number;
   id: string;
   lastModificationTime?: string;
-  userId: string;
   lockedBalance: number;
-  balance: number;
-  totalUsed: number;
+  membershipDisplayName: string;
   membershipName?: string;
+  name: string;
+  phoneNumber: string;
+  totalUsed: number;
+  totalUsedCoupons: number;
+  userId: string;
+  userName: string;
 }
 
-interface AccountGetListInput extends PagedAndSortedResultRequestDto {}
+interface AccountGetListInput extends PagedAndSortedResultRequestDto {
+  maxBalance?: number;
+  maxCoupons?: number;
+  maxExperience?: number;
+  maxTotalUsed?: number;
+  maxTotalUsedCoupons?: number;
+  minBalance?: number;
+  minCoupons?: number;
+  minExperience?: number;
+  minTotalUsed?: number;
+  minTotalUsedCoupons?: number;
+}
 
 interface ChangeAccountBalanceInput {
-  description: string;
   changedBalance: number;
+  description: string;
 }
 
-export type { AccountDto, AccountGetListInput, ChangeAccountBalanceInput };
+interface ChangeAccountCouponsInput {
+  changedCoupons: number;
+  description: string;
+}
+
+export type {
+  AccountDto,
+  AccountGetListInput,
+  ChangeAccountBalanceInput,
+  ChangeAccountCouponsInput,
+};

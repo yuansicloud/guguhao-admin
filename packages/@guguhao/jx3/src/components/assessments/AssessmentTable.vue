@@ -6,13 +6,19 @@ import type { AssessmentDto } from '../../types/assessments';
 
 import { h, onMounted, ref } from 'vue';
 
+import { useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { useVbenVxeGrid } from '@abp/ui';
-import { CheckOutlined, RedoOutlined } from '@ant-design/icons-vue';
+import {
+  CheckOutlined,
+  RedoOutlined,
+  UserOutlined,
+} from '@ant-design/icons-vue';
 import { Button, message, Modal } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
+import AccountModal from '../../../../point/src/components/accounts/AccountModal.vue';
 import { getPagedListApi } from '../../api/assessments';
 import { assessCharacterTemplateApi } from '../../api/character-templates';
 import { assessCharacterApi } from '../../api/characters';
@@ -274,6 +280,11 @@ const [Grid, { query }] = useVbenVxeGrid({
   gridOptions,
 });
 
+// Setup AccountModal modal instance
+const [AccountModalComp, accountModalApi] = useVbenModal({
+  connectedComponent: AccountModal,
+});
+
 onMounted(async () => {});
 
 function onSort(params: { field: string; order: SortOrder }) {
@@ -296,6 +307,14 @@ const handleAssessCharacter = (row: AssessmentDto) => {
     title: $t('AbpUi.AreYouSure'),
   });
 };
+
+function openAccountModal(row: AssessmentDto) {
+  if (row.creatorId) {
+    // Pass the creatorId to the AccountModal
+    accountModalApi.setData({ id: row.creatorId });
+    accountModalApi.open();
+  }
+}
 </script>
 
 <template>
@@ -313,9 +332,21 @@ const handleAssessCharacter = (row: AssessmentDto) => {
             {{ $t('jx3.refresh') }}
           </Button>
         </div>
+        <div v-if="row.creatorId" class="basis-1/3">
+          <Button
+            :icon="h(UserOutlined)"
+            block
+            type="link"
+            @click="openAccountModal(row)"
+          >
+            {{ $t('AbpIdentity.Users') }}
+          </Button>
+        </div>
       </div>
     </template>
   </Grid>
+  <!-- Render the AccountModal -->
+  <AccountModalComp />
 </template>
 
 <style lang="scss" scoped></style>

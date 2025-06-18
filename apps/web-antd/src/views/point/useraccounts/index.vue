@@ -1,7 +1,7 @@
-<script lang="ts" setup>
+﻿<script lang="ts" setup>
 import { Page } from '@vben/common-ui';
 
-import { AccountTable } from '@guguhao/point';
+import { UserAccountTable } from '@guguhao/point';
 
 defineOptions({
   name: 'PointAccount',
@@ -10,6 +10,6 @@ defineOptions({
 
 <template>
   <Page>
-    <AccountTable />
+    <UserAccountTable />
   </Page>
 </template>
