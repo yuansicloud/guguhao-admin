@@ -5,6 +5,7 @@ import type { FormInstance } from 'ant-design-vue';
 import type {
   AccountDto,
   ChangeAccountBalanceInput,
+  ChangeAccountCouponsInput,
 } from '../../types/accounts';
 import type { TransactionDto } from '../../types/transactions';
 
@@ -26,7 +27,11 @@ import {
   Tabs,
 } from 'ant-design-vue';
 
-import { changeBalanceApi, getByUserIdApi } from '../../api/accounts';
+import {
+  changeBalanceApi,
+  changeCouponsApi,
+  getByUserIdApi,
+} from '../../api/accounts';
 import { getPagedListApi } from '../../api/transactions';
 
 defineOptions({
@@ -46,6 +51,11 @@ const formModel = ref<AccountDto>({ ...defaultModel });
 
 const changeBalanceForm = ref<ChangeAccountBalanceInput>({
   changedBalance: 0,
+  description: '系统调整',
+});
+
+const changeCouponForm = ref<ChangeAccountCouponsInput>({
+  changedCoupons: 0,
   description: '系统调整',
 });
 
@@ -129,6 +139,29 @@ const handleChangeBalance = async () => {
     message.error($t('point.balanceChangeFailed'));
   }
 };
+
+const handleChangeCoupon = async () => {
+  try {
+    const userDto = modalApi.getData<IdentityUserDto>();
+    if (formModel.value.id) {
+      await changeCouponsApi(formModel.value.id, changeCouponForm.value);
+      message.success($t('point.couponsChangedSuccessfully'));
+      // Refresh account data
+      const account = await getByUserIdApi(userDto.id);
+      formModel.value = account;
+      // Refresh transactions
+      await initTransactions(userDto.id);
+      // Reset form
+      changeCouponForm.value = {
+        changedCoupons: 0,
+        description: '系统调整',
+      };
+    }
+  } catch (error) {
+    console.error('Coupon change failed:', error);
+    message.error($t('point.couponChangeFailed'));
+  }
+};
 </script>
 
 <template>
@@ -193,8 +226,20 @@ const handleChangeBalance = async () => {
           <FormItem :label="$t('point.lockedBalance')" name="lockedBalance">
             <Input v-model:value="formModel.lockedBalance" disabled />
           </FormItem>
+          <FormItem :label="$t('point.coupons')" name="coupons">
+            <Input v-model:value="formModel.coupons" disabled />
+          </FormItem>
           <FormItem :label="$t('point.totalUsed')" name="totalUsed">
             <Input v-model:value="formModel.totalUsed" disabled />
+          </FormItem>
+          <FormItem
+            :label="$t('point.totalUsedCoupons')"
+            name="totalUsedCoupons"
+          >
+            <Input v-model:value="formModel.totalUsedCoupons" disabled />
+          </FormItem>
+          <FormItem :label="$t('point.experience')" name="experience">
+            <Input v-model:value="formModel.experience" disabled />
           </FormItem>
           <FormItem :label="$t('point.membershipName')" name="membershipName">
             <Input v-model:value="formModel.membershipName" disabled />
@@ -276,6 +321,48 @@ const handleChangeBalance = async () => {
             <div class="flex w-full items-center justify-center">
               <Button type="primary" @click="handleChangeBalance">
                 {{ $t('point.changeBalance') }}
+              </Button>
+            </div>
+          </Form>
+        </TabPane>
+
+        <TabPane
+          v-if="checkManageRolePolicy()"
+          key="changeCoupon"
+          :tab="$t('point.adjustCoupons')"
+        >
+          <Form
+            :model="changeCouponForm"
+            :label-col="{ span: 6 }"
+            :wrapper-col="{ span: 18 }"
+          >
+            <FormItem
+              :label="$t('point.changeAmount')"
+              name="changedCoupons"
+              :rules="[{ required: true }]"
+            >
+              <InputNumber
+                v-model:value="changeCouponForm.changedCoupons"
+                style="width: 100%"
+                :min="-100000"
+                :max="100000"
+              />
+            </FormItem>
+
+            <FormItem
+              :label="$t('point.description')"
+              name="description"
+              :rules="[{ required: true }]"
+            >
+              <Input
+                v-model:value="changeCouponForm.description"
+                :placeholder="$t('point.description')"
+              />
+            </FormItem>
+
+            <div class="flex w-full items-center justify-center">
+              <Button type="primary" @click="handleChangeCoupon">
+                {{ $t('point.changeCoupon') }}
               </Button>
             </div>
           </Form>
