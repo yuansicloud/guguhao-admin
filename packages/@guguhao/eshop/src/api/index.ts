@@ -1,1 +1,3 @@
-export * as ordersApi from './orders';
+export * from './orders';
+export * from './products';
+export * from './stores';

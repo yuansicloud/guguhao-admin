@@ -15,11 +15,27 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         meta: {
-          title: $t('eshop.order'),
+          title: $t('EasyAbpEShopOrders.Order'),
         },
         name: 'eshopOrders',
         path: '/orders',
         component: () => import('#/views/eshop/orders/index.vue'),
+      },
+      {
+        meta: {
+          title: $t('EasyAbpEShopStores.Store'),
+        },
+        name: 'eshopStores',
+        path: '/stores',
+        component: () => import('#/views/eshop/stores/index.vue'),
+      },
+      {
+        meta: {
+          title: $t('EasyAbpEShopProducts.Product'),
+        },
+        name: 'eshopProducts',
+        path: '/products',
+        component: () => import('#/views/eshop/products/index.vue'),
       },
     ],
   },

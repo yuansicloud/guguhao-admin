@@ -1,6 +1,6 @@
 import type { PagedResultDto } from '@abp/core';
 
-import type { Order, OrderDto, OrderGetListInput } from '../types/orders';
+import type { OrderDto, OrderGetListInput } from '../types/orders';
 
 import { requestClient } from '@abp/request';
 
